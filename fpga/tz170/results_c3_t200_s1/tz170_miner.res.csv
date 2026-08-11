@@ -1,0 +1,11 @@
+sep=\t
+Module Resource Usage Distribution Estimates
+Generated at: Aug 04, 2026 14:58:37
+
+Note: some resources maybe grouped under different hierarchy due to optimization and LUT mapping
+
+Module	          FFs	      SRLs	      ADDs	         LUTs	    COMB4s	      RAMs	 DSP/MULTs
+tz170_miner:tz170_miner                                     	  31678(216)	     2(0)	   72(42)	  63898(308)	     0(0)	   768(0)	   128(0)	
+ +g_ring[0].u_miner:miner(EPOCH_CONST=64'b1000000011001110111111111011001101000101010100000011110100100110,NONCE0=0,NSTRIDE=1)	31431(16052)	     2(2)	   15(15)	 63549(5777)	     0(0)	   768(0)	   128(0)	
+  +u_ring:ring                                              	15379(15379)	     0(0)	     0(0)	57772(57772)	     0(0)	 768(768)	 128(128)	
+ +u_uart:uart_tx(CLK_HZ=33333333)                           	      31(31)	     0(0)	   15(15)	      41(41)	     0(0)	     0(0)	     0(0)	

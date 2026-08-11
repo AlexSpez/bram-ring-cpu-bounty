@@ -1,0 +1,17 @@
+# BRAM-ring — Python dependencies.
+#
+# The CORE needs NOTHING here: `make`, `make race` (CPU), and `make prove`
+# (Python/C/RTL) run on the standard library alone (plus a C compiler with
+# OpenMP, and iverilog for the RTL sim). Install the extras only for the
+# optional competitors:
+#
+#   GPU competitor:   pip install numpy cupy-cuda12x   (match your CUDA: 12x / 11x)
+#   FPGA competitor:  pip install pyserial
+#
+# Tip: put these in a venv and point the race at it:
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+#   make race GPU_PY=$(pwd)/.venv/bin/python
+
+numpy                # GPU competitor (gpu/mine.py)
+cupy-cuda12x         # GPU competitor (gpu/mine.py) — CUDA 12.x wheel; use cupy-cuda11x for CUDA 11
+pyserial             # FPGA competitor (reads the board's UART: fpga/race_fpga.py)

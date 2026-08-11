@@ -1,0 +1,38 @@
+
+Efinix FPGA Placement and Routing.
+Version: 2025.2.288 
+Date: Tue Aug  4 15:59:59 2026
+
+Copyright (C) 2013 - 2025 Efinix, Inc. All rights reserved.
+ 
+Family: Topaz 
+Device: Tz170J484
+Top-level Entity Name: tz170_miner
+
+---------- Module Resource Usage Distribution Estimates (begin) ----------
+
+'Module Resource Usage Distribution Estimates' table printed in: outflow/tz170_miner-hierarchical_stats.rpt
+
+----------- Module Resource Usage Distribution Estimates (end) ----------
+
+---------- Resource Summary (begin) ----------
+Inputs: 1 / 3706 (0.03%)
+Outputs: 3 / 4655 (0.06%)
+Global Clocks (GBUF): 1 / 32 (3.12%)
+Regional Clocks (RBUF): 0 / 48 (0.00%)
+	RBUF: Core: 0 / 32 (0.00%)
+	RBUF: Periphery: 0 / 8 (0.00%)
+	RBUF: Multi-Region: 0 / 8 (0.00%)
+XLRs: 103080 / 172800 (59.65%)
+	XLRs needed for Logic: 45951 / 172800 (26.59%)
+	XLRs needed for Logic + FF: 17862 / 172800 (10.34%)
+	XLRs needed for Adder: 42 / 172800 (0.02%)
+	XLRs needed for Adder + FF: 30 / 172800 (0.02%)
+	XLRs needed for FF: 16393 / 172800 (9.49%)
+	XLRs needed for SRL8: 2 / 32000 (0.01%)
+	XLRs needed for SRL8 + FF: 0 / 32000 (0.00%)
+	XLRs needed for Routing: 22800 / 172800 (13.19%)
+Memory Blocks: 768 / 1280 (60.00%)
+DSP Blocks: 128 / 640 (20.00%)
+---------- Resource Summary (end) ----------
+

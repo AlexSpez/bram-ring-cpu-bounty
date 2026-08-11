@@ -1,0 +1,214 @@
+
+Efinix Static Timing Analysis Report
+Version: 2025.2.288
+Date: Tue Aug  4 16:17:11 2026
+
+Copyright (C) 2013 - 2025 Efinix, Inc. All rights reserved.
+
+Top-level Entity Name: tz170_miner
+
+SDC Filename: combined.sdc
+
+Timing Model: C2
+	process : typical
+	temperature : 0C to 85C
+	voltage : 0.95 +/-30mV
+	speedgrade : 2
+	technology : t16ff
+	status : final
+
+---------- Table of Contents (begin) ----------
+   1. Clock Frequency Summary
+   2. Clock Relationship Summary
+   3. Path Details for Max Critical Paths
+   4. Path Details for Min Critical Paths
+---------- Table of Contents (end) ------------
+
+---------- 1. Clock Frequency Summary (begin) ----------
+
+User target constrained clocks
+ Clock Name  Period (ns)  Frequency (MHz)   Waveform      Targets
+    clk         4.000         250.000     {0.000 2.000}    {clk}
+
+Maximum possible analyzed clocks frequency
+ Clock Name  Period (ns)  Frequency (MHz)     Edge
+    clk         5.227        191.314         (R-R)
+
+Geomean max period: 5.227
+
+---------- Clock Frequency Summary (end) ---------------
+
+---------- 2. Clock Relationship Summary (begin) ----------
+
+Setup (Max) Clock Relationship
+  Launch Clock    Capture Clock   Constraint (ns)     Slack (ns)          Edge
+      clk              clk             4.000            -1.227           (R-R)
+
+Hold (Min) Clock Relationship
+  Launch Clock    Capture Clock   Constraint (ns)     Slack (ns)          Edge
+      clk              clk             0.000            0.089            (R-R)
+
+NOTE: Values are in nanoseconds.
+
+---------- Clock Relationship Summary (end) ---------------
+
+---------- 3. Path Details for Max Critical Paths (begin) ----------
+
+################################################################################
+Path Detail Report (clk vs clk)
+################################################################################
+
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Path Begin    : g_ring[0].u_miner/r_state_out[14860]~FF|CLK
+Path End      : g_ring[0].u_miner/u_ring/p126[26]~FF|D     
+Launch Clock  : clk (RISE)                                 
+Capture Clock : clk (RISE)                                 
+Slack         : -1.227 (required time - arrival time)      
+Delay         : 4.929                                      
+
+Logic Level             : 7
+Non-global nets on path : 8
+Global nets on path     : 0
+
+Launch Clock Path Delay        : 3.819
++ Clock To Q + Data Path Delay : 5.082
+--------------------------------------
+End-of-path arrival time       : 8.901
+
+Constraint                     : 4.000
++ Capture Clock Path Delay     : 3.819
+- Clock Uncertainty            : 0.145
+--------------------------------------
+End-of-path required time      : 7.674
+
+Launch Clock Path
+                   name                      model name   delay (ns)  cumulative delay (ns) pins on net    location
+=====================================================================================================================
+clk                                            input        0.000             0.000                0      (109,643)
+clk                                            input        0.145             0.145            35952      (109,643)
+clk                                            net          3.674             3.819            35952      (109,643)
+   Routing elements:
+      Manhattan distance of X:106, Y:486
+g_ring[0].u_miner/r_state_out[14860]~FF|CLK    EFX_FF       0.000             3.819            35952      (215,157)
+
+Data Path
+                  name                     model name   delay (ns)  cumulative delay (ns) pins on net    location
+===================================================================================================================
+g_ring[0].u_miner/r_state_out[14860]~FF|Q  EFX_FF         0.149             0.149              6        (215,157)
+g_ring[0].u_miner/r_state_out[14860]       net            1.355             1.504              6        (215,157)
+   Routing elements:
+      Manhattan distance of X:85, Y:125
+g_ring[0].u_miner/u_ring/mult_1017|B[0]    EFX_DSP48      1.515             3.019              6        (130,282)
+g_ring[0].u_miner/u_ring/mult_1017|O[1]    EFX_DSP48      0.000             3.019              2        (130,282)
+g_ring[0].u_miner/u_ring/n21236            net            0.497             3.516              2        (130,282)
+   Routing elements:
+      Manhattan distance of X:1, Y:2
+LUT__226001|in[0]                          EFX_LUT4       0.071             3.587              2        (131,284)
+LUT__226001|out                            EFX_LUT4       0.000             3.587              2        (131,284)
+n112425                                    net            0.351             3.938              2        (131,284)
+   Routing elements:
+      Manhattan distance of X:0, Y:5
+LUT__226005|in[0]                          EFX_LUT4       0.071             4.009              2        (131,289)
+LUT__226005|out                            EFX_LUT4       0.000             4.009              5        (131,289)
+n112429                                    net            0.313             4.322              5        (131,289)
+   Routing elements:
+      Manhattan distance of X:2, Y:15
+LUT__226016|in[0]                          EFX_LUT4       0.073             4.395              5        (133,304)
+LUT__226016|out                            EFX_LUT4       0.000             4.395              4        (133,304)
+n112435                                    net            0.115             4.510              4        (133,304)
+   Routing elements:
+      Manhattan distance of X:0, Y:1
+LUT__226022|in[1]                          EFX_LUT4       0.073             4.583              4        (133,303)
+LUT__226022|out                            EFX_LUT4       0.000             4.583              5        (133,303)
+n112438                                    net            0.116             4.699              5        (133,303)
+   Routing elements:
+      Manhattan distance of X:0, Y:1
+LUT__226025|in[0]                          EFX_LUT4       0.073             4.772              5        (133,302)
+LUT__226025|out                            EFX_LUT4       0.000             4.772              3        (133,302)
+n112439                                    net            0.235             5.007              3        (133,302)
+   Routing elements:
+      Manhattan distance of X:5, Y:5
+LUT__226026|in[1]                          EFX_LUT4       0.071             5.078              3        (138,297)
+LUT__226026|out                            EFX_LUT4       0.000             5.078              2        (138,297)
+g_ring[0].u_miner/n106975                  net            0.000             5.078              2        (138,297)
+g_ring[0].u_miner/u_ring/p126[26]~FF|D     EFX_FF         0.004             5.082              2        (138,297)
+
+Capture Clock Path
+                  name                    model name   delay (ns)  cumulative delay (ns) pins on net    location
+==================================================================================================================
+clk                                         input        0.000             0.000                0      (109,643)
+clk                                         input        0.145             0.145            35952      (109,643)
+clk                                         net          3.674             3.819            35952      (109,643)
+   Routing elements:
+      Manhattan distance of X:29, Y:346
+g_ring[0].u_miner/u_ring/p126[26]~FF|CLK    EFX_FF       0.000             3.819            35952      (138,297)
+
+---------- Path Details for Max Critical Paths (end) ---------------
+
+---------- 4. Path Details for Min Critical Paths (begin) ----------
+
+################################################################################
+Path Detail Report (clk vs clk)
+################################################################################
+
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Path Begin    : g_ring[0].u_miner/r_state_next[6074]~FF|CLK
+Path End      : g_ring[0].u_miner/r_state_out[6074]~FF|D   
+Launch Clock  : clk (RISE)                                 
+Capture Clock : clk (RISE)                                 
+Slack         : 0.089 (arrival time - required time)       
+Delay         : 0.087                                      
+
+Logic Level             : 1
+Non-global nets on path : 2
+Global nets on path     : 0
+
+Launch Clock Path Delay        : 1.845
++ Clock To Q + Data Path Delay : 0.159
+--------------------------------------
+End-of-path arrival time       : 2.004
+
+Constraint                     : 0.000
++ Capture Clock Path Delay     : 1.845
++ Clock Uncertainty            : 0.070
+--------------------------------------
+End-of-path required time      : 1.915
+
+Launch Clock Path
+                   name                      model name   delay (ns)  cumulative delay (ns) pins on net    location
+=====================================================================================================================
+clk                                            input        0.000             0.000                0      (109,643)
+clk                                            input        0.070             0.070            35952      (109,643)
+clk                                            net          1.775             1.845            35952      (109,643)
+   Routing elements:
+      Manhattan distance of X:94, Y:264
+g_ring[0].u_miner/r_state_next[6074]~FF|CLK    EFX_FF       0.000             1.845            35952      (203,379)
+
+Data Path
+                  name                     model name   delay (ns)  cumulative delay (ns) pins on net    location
+===================================================================================================================
+g_ring[0].u_miner/r_state_next[6074]~FF|Q   EFX_FF        0.072             0.072              3        (203,379)
+g_ring[0].u_miner/r_state_next[6074]        net           0.053             0.125              3        (203,379)
+   Routing elements:
+      Manhattan distance of X:2, Y:0
+LUT__174907|in[1]                           EFX_LUT4      0.034             0.159              3        (201,379)
+LUT__174907|out                             EFX_LUT4      0.000             0.159              2        (201,379)
+g_ring[0].u_miner/u_ring/n357406            net           0.000             0.159              2        (201,379)
+g_ring[0].u_miner/r_state_out[6074]~FF|D    EFX_FF        0.000             0.159              2        (201,379)
+
+Capture Clock Path
+                   name                     model name   delay (ns)  cumulative delay (ns) pins on net    location
+====================================================================================================================
+clk                                           input        0.000             0.000                0      (109,643)
+clk                                           input        0.070             0.070            35952      (109,643)
+clk                                           net          1.775             1.845            35952      (109,643)
+   Routing elements:
+      Manhattan distance of X:92, Y:264
+g_ring[0].u_miner/r_state_out[6074]~FF|CLK    EFX_FF       0.000             1.845            35952      (201,379)
+
+---------- Path Details for Min Critical Paths (end) ---------------
+

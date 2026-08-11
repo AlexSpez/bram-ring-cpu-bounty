@@ -1,0 +1,41 @@
+# build artifacts
+cpu/simple
+cpu/verify_avx2
+*.o
+.gen.stamp
+__pycache__/
+*.pyc
+*.vvp
+
+# Efinity build residue (fpga/tz170) -- results_*/ archives ARE tracked
+fpga/tz170/work_*/
+fpga/tz170/outflow/
+fpga/tz170/*.xml
+fpga/tz170/*.sdc
+fpga/tz170/*.log
+!fpga/tz170/build_c*_*.log
+fpga/tz170/RUNPNR_*
+fpga/tz170/ring.v
+fpga/tz170/miner.v
+fpga/tz170/tz170_miner.v
+fpga/tz170/uart_tx.v
+fpga/tz170/epoch.vh
+fpga/tz170/params.vh
+fpga/tz170/prev256.vh
+fpga/tz170/miner_defs.vh
+
+# Efinity build residue (fpga/devkit) -- same scheme as tz170
+fpga/devkit/work_*/
+fpga/devkit/outflow/
+fpga/devkit/*.xml
+fpga/devkit/*.sdc
+fpga/devkit/*.log
+fpga/devkit/RUNPNR_*
+fpga/devkit/ring.v
+fpga/devkit/miner.v
+fpga/devkit/top.v
+fpga/devkit/uart_tx.v
+fpga/devkit/epoch.vh
+fpga/devkit/params.vh
+fpga/devkit/prev256.vh
+fpga/devkit/miner_defs.vh

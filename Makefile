@@ -1,8 +1,8 @@
 # BRAM-ring
 #
 #   make               build everything and report your environment
-#   make race          run the live mining race   (default target difficulty)
-#   make race DIFF=20  ... at a difficulty you choose (leading zero bits)
+#   make race          run the live mining race   (default target: 20 leading-zero bits)
+#   make race DIFF=16  ... at a difficulty you choose; 16 = a ~2 min demo without an FPGA
 #   make prove         check Python == C == Verilog == CUDA, bit-for-bit
 #   make clean
 #
@@ -22,8 +22,9 @@ RUNPY   = env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(PY)
 #   make race GPU_PY=/path/to/venv/bin/python
 GPU_PY ?=
 GPY     = $(if $(GPU_PY),$(GPU_PY),$(PY))
-# default race target (leading zero bits); override with: make race DIFF=20
-DIFF   ?= 24
+# default race target (leading zero bits); override with: make race DIFF=16
+# 20 bits ~= 1M hashes: ~15 min with only CPU+GPU racing (~2 kH/s), seconds with an FPGA.
+DIFF   ?= 20
 
 .PHONY: all gen bench check warmup race prove sim clean
 

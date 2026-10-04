@@ -57,7 +57,7 @@ sim. The optional competitors need a little more (all in `requirements.txt`):
 
 ```
 make          # build everything; report what you have (GPU, iverilog, Efinity, board)
-make race     # live mining race   (make race DIFF=20 for a quick one)
+make race     # live mining race   (default 20 bits; make race DIFF=16 for a ~2 min demo)
 make prove    # check Python == C == Verilog == CUDA bit-for-bit + avalanche
 ```
 
@@ -66,7 +66,10 @@ leg (8 vectors at 2563 cycles/hash); a quiet console after the avalanche line
 is the RTL sim working, not a hang.
 
 `make race` runs each competitor mining until one clears a target difficulty,
-then prints the winning nonce — check it with `host/verify_solution.py`. Rates
+then prints the winning nonce — check it with `host/verify_solution.py`. The
+default 20-bit target is about a million hashes: **~15 minutes when only the
+CPU and GPU are racing** (~2 kH/s between them; 818 s measured on the reference
+box), seconds once an FPGA joins; `make race DIFF=16` is a ~2-minute demo. Rates
 are inferred mining-pool style from "shares" (partial solutions), so every
 number is backed by checkable proofs of work. With no GPU it races the two CPU
 attacks; add the GPU with `make race GPU_PY=/path/to/venv/bin/python`, and the

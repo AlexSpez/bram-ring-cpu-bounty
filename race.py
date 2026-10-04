@@ -12,7 +12,7 @@ a low, self-tuning partial target) and we estimate hashes/sec from the share
 stream (sum of each share's 2^D of work). This works the same over a fast pipe
 or a slow UART, and every share is a checkable proof of real work.
 
-  python3 race.py --target 24
+  python3 race.py --target 20
   python3 race.py                 # prompts for the target
 
 Competitors are ranked by hash rate, leader on top -- so when the FPGA joins,
@@ -135,8 +135,8 @@ def main():
     a = ap.parse_args()
     target = a.target
     if target is None:
-        try: target = int(input("target difficulty (leading zero bits, e.g. 24): ") or "24")
-        except (EOFError, ValueError): target = 24
+        try: target = int(input("target difficulty (leading zero bits, e.g. 20): ") or "20")
+        except (EOFError, ValueError): target = 20
     target = max(1, min(ZMAX, target))
 
     runners = [Runner(l, v, target) for l, v in competitors()]

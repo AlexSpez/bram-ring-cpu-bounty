@@ -6,6 +6,7 @@ cpu/verify_avx2
 __pycache__/
 *.pyc
 *.vvp
+.prove_skip_*
 
 # Efinity build residue (fpga/tz170) -- results_*/ archives ARE tracked
 fpga/tz170/work_*/

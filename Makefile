@@ -79,27 +79,30 @@ race: bench
 #
 # Every leg either PASSES or FAILS THE MAKE. A leg that cannot run on this
 # box is reported by name in the final summary as NOT CHECKED -- never
-# silently folded into a success line. (An earlier version printed
+# silently folded into a success line. Scratch files (the compiled sim,
+# the NOT-CHECKED markers) live inside this clone, not in /tmp, so two
+# clones proving on one machine cannot clobber each other. (An earlier version printed
 # "ALL ... BIT-EXACT" even when the RTL leg had printed FAIL and when the
 # CUDA leg had not run at all. Red-proof any change here: break an
 # implementation on purpose and confirm `make prove` exits non-zero.)
 prove: bench
+	@rm -f .prove_skip_rtl .prove_skip_gpu      # never inherit a stale marker
 	@cd cpu && ./simple
 	@cd cpu && ./verify_avx2
 	@cd cpu && ./simple avalanche
 	@if command -v iverilog >/dev/null 2>&1; then \
-	  cd fpga && iverilog -o /tmp/tbv.vvp tb_vectors.v ring.v efx_ram10_model.v && vvp /tmp/tbv.vvp \
+	  cd fpga && iverilog -o tb_vectors.vvp tb_vectors.v ring.v efx_ram10_model.v && vvp tb_vectors.vvp \
 	    || { echo "RTL LEG FAILED"; exit 1; }; \
-	else echo "$$(printf 'RTL')" > /tmp/.brr_skip_rtl; echo "!! iverilog missing -- RTL leg NOT CHECKED"; fi
+	else echo RTL > .prove_skip_rtl; echo "!! iverilog missing -- RTL leg NOT CHECKED"; fi
 	@if env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(GPY) -c "import cupy" >/dev/null 2>&1; then \
 	  env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(GPY) gpu/mine.py \
 	    || { echo "CUDA LEG FAILED"; exit 1; }; \
-	else echo "CUDA" > /tmp/.brr_skip_gpu; echo "!! cupy/NVIDIA GPU missing -- CUDA leg NOT CHECKED (cupy in a venv? re-run: make prove GPU_PY=/path/to/venv/bin/python)"; fi
+	else echo CUDA > .prove_skip_gpu; echo "!! cupy/NVIDIA GPU missing -- CUDA leg NOT CHECKED (cupy in a venv? re-run: make prove GPU_PY=/path/to/venv/bin/python)"; fi
 	@echo ""
 	@skipped=""; \
-	 [ -f /tmp/.brr_skip_rtl ] && skipped="$$skipped RTL"; \
-	 [ -f /tmp/.brr_skip_gpu ] && skipped="$$skipped CUDA"; \
-	 rm -f /tmp/.brr_skip_rtl /tmp/.brr_skip_gpu; \
+	 [ -f .prove_skip_rtl ] && skipped="$$skipped RTL"; \
+	 [ -f .prove_skip_gpu ] && skipped="$$skipped CUDA"; \
+	 rm -f .prove_skip_rtl .prove_skip_gpu; \
 	 if [ -n "$$skipped" ]; then \
 	   echo "PYTHON + C LEGS BIT-EXACT ON THE GOLDEN VECTORS"; \
 	   echo "NOT CHECKED ON THIS BOX:$$skipped  (install iverilog / cupy to check them too)"; \
@@ -108,7 +111,7 @@ prove: bench
 	 fi
 
 sim: gen
-	cd fpga && iverilog -o /tmp/tbv.vvp tb_vectors.v ring.v efx_ram10_model.v && vvp /tmp/tbv.vvp
+	cd fpga && iverilog -o tb_vectors.vvp tb_vectors.v ring.v efx_ram10_model.v && vvp tb_vectors.vvp
 
 clean:
-	rm -f cpu/simple cpu/verify_avx2 cpu/*.o $(GEN_STAMP)
+	rm -f cpu/simple cpu/verify_avx2 cpu/*.o $(GEN_STAMP) fpga/tb_vectors.vvp .prove_skip_rtl .prove_skip_gpu

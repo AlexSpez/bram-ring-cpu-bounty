@@ -41,14 +41,15 @@ Run me:   python3 spec.py       # prints (nonce -> digest); ~minutes per hash
 """
 import hashlib
 
-# ---- parameters (sized so one core fits about half a Tz170, the cheap
+# ---- parameters (sized so one core uses about 60% of a Tz170, the cheap
 # ---- reference part; bigger chips replicate cores) ----
 B     = 768   # lanes (= RAM banks = RAM10 blocks). B is part of the FUNCTION,
               # so the smallest miner floorplan sets it for the whole network:
-              # one core fits ~49% of a Topaz Tz170 (161k LEs, 1088 RAM10),
-              # leaving the other half for the rest of a production miner;
-              # a Ti375 carries two cores. Must be a multiple of 64
-              # (miner.v PREV rotator: B*W % 256 == 0).
+              # one core uses ~60% of a Topaz Tz170 (768 of its 1280 RAM10
+              # blocks, ~60% of its logic cells -- see the place reports in
+              # fpga/tz170/results_*/), leaving ~40% for the rest of a
+              # production miner; a Ti375 carries two cores (57%). Must be
+              # a multiple of 64 (miner.v PREV rotator: B*W % 256 == 0).
 W     = 20    # bits per lane, and per RAM entry (RAM10 native width)
 DEPTH = 512   # entries per RAM bank (RAM10 native depth at W=20 -- full block)
 ADDR  = 9     # address bits (2**ADDR == DEPTH)

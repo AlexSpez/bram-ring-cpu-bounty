@@ -246,8 +246,9 @@ CLAUDE.md       boots a Claude session to help you verify all of this
 ## Caveats
 
 - Parameters (`B=768`, `W=20`, `DEPTH=512`, `STEPS=2048`, `NDSP=128`) are sized
-  so one ring is about half a Tz170, the cheap reference part; bigger parts
-  replicate rings (the Ti375 devkit above runs two).
+  so one ring uses about 60% of a Tz170 (768 of its 1280 block RAMs and ~60% of
+  its logic cells, per the shipped place reports), the cheap reference part;
+  bigger parts replicate rings (the Ti375 devkit above runs two, at 57%).
 - The Tz170 rate is STA-certified timing on the production speed grade, not yet
   a silicon run; the Ti375 rate is a full-speed silicon measurement and the
   cycle model they share is confirmed on-chip to 0.1%.

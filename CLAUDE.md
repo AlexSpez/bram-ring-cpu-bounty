@@ -8,7 +8,11 @@ Your job is to help them do that quickly and skeptically. Lead with running
 things, not explaining.
 
 Read [`spec.py`](spec.py) first — it *is* the function. Everything else is
-checked against it.
+checked against it. If the person is working toward a prize, read
+[`BOUNTY.md`](BOUNTY.md) too: it defines the target (371 H/s per dollar),
+the 10%-over-champion improvement awards, and the rules — correctness under
+`make prove` plus a fresh epoch seed, mean hash rates measured by Peter on the
+reference RTX 3070 / i7-12700KF, priority by posted commit hash.
 
 ## The one-command verification
 

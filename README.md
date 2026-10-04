@@ -93,7 +93,7 @@ adversarial passes were hired to beat them — both wins are merged; see
 [Beat us](#beat-us).
 
 **The economics, honestly framed.** The FPGA doing this is a single mid-range
-part — a **~$50 chip** of the Tz170's class; built into a finished device it
+part — a **~$40 chip** of the Tz170's class; built into a finished device it
 is plausibly a **~$100 product**, against a ~$500 GPU it out-mines ~50-fold.
 (The measured numbers above come from our Ti375 development board — dev kits
 of any brand carry lab-tool pricing that says nothing about the part.) Power:
@@ -131,7 +131,7 @@ at its full 95 MHz clock — 100.1% of the cycle model — and found nonce
 part (Tz170, one ring — the smallest miner floorplan that sets `B` for the
 network), timing closes at **201.8 MHz** on the slower production speed grade
 (STA-certified, best of the two shipped seeds — the other closes 199.8;
-that's ~78.7k H/s from a ~$50 chip — silicon run pending).
+that's ~78.7k H/s from a ~$40 chip — silicon run pending).
 
 ### Why the GPU can't catch up
 
@@ -167,7 +167,10 @@ shipped microbenchmark, replace them.)
 
 This repo exists to be beaten. If you make a **bit-exact** implementation
 faster than ours, you have found the moat's real width — and we want the
-number.
+number. **There is money on it:** [`BOUNTY.md`](BOUNTY.md) pays 0.1 BTC for
+non-FPGA hardware that reaches 371 H/s per dollar, and 0.01 BTC for each 10%
+improvement to the GPU or CPU champion, with the claim procedure and deadline.
+Read it before you start.
 
 **What counts as a win.** Your implementation must reproduce `vectors.txt`
 exactly — every vector, fold *and* full-state digest — and mine the unmodified
@@ -232,6 +235,7 @@ that board's silicon run is pending).
 
 ```
 spec.py         the function, written to be read   (start here)
+BOUNTY.md       the prizes for beating the numbers below, and how to claim
 generate.py     emits the C tables, the Verilog ring, and the golden vectors
 vectors.txt     golden (nonce -> digest, fold) tuples every implementation must hit
 cpu/            simple.c (naive baseline), verify_avx2.c (the champion attack)

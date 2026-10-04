@@ -27,16 +27,26 @@ def parse(line):
         return None
 
 def run(port, baud, seconds):
+    """Stream status frames from `port`; returns True if any frame arrived.
+    A silent port (board not running the miner, or the wrong UART channel) is
+    reported every few seconds instead of hanging quietly, and `seconds` is
+    honoured while waiting, not only after a frame has been parsed."""
     import serial
     ser = serial.Serial(port, baud, timeout=2)
     print(f"reading {port} @ {baud}  (target = {TARGET:#010x}, {32-TARGET.bit_length()} leading-zero bits)")
-    t0 = time.time(); hc0 = None; verified = {}; win = []
+    t0 = time.time(); verified = {}; win = []; last_wait = t0
     while True:
         raw = ser.readline().decode("ascii", "ignore").strip()
-        f = parse(raw)
-        if not f: continue
-        hc, nonce, fold, found = f
         now = time.time()
+        f = parse(raw)
+        if not f:
+            if seconds and now - t0 > seconds: break
+            if not win and now - last_wait >= 5:
+                print(f"[{now-t0:6.1f}s] no frames yet on {port} -- is the miner bitstream loaded, "
+                      f"and is this the board's UART channel?  (ctrl-c to stop)")
+                last_wait = now
+            continue
+        hc, nonce, fold, found = f
         win.append((now, hc))
         while len(win) > 2 and now - win[0][0] > 10: win.pop(0)   # rolling ~10 s window
         (tw, hw) = win[0]
@@ -49,6 +59,9 @@ def run(port, baud, seconds):
             msg += f"  SOLUTION nonce={nonce:#x} fold={fold:#010x} [{verified[nonce]} vs spec]"
         print(msg)
         if seconds and now - t0 > seconds: break
+    if not win:
+        print(f"{port}: no status frames received")
+    return bool(win)
 
 def main():
     ap = argparse.ArgumentParser()
@@ -57,12 +70,16 @@ def main():
     ap.add_argument("--seconds", type=float, default=0)
     a = ap.parse_args()
     ports = [a.port] if a.port else sorted(glob.glob("/dev/ttyUSB*"))
+    # auto-probe mode: give each candidate port a few seconds (frames come ~2x/s)
+    # instead of sitting on the first silent one forever
+    seconds = a.seconds or (6 if a.port is None else 0)
     for p in ports:
         try:
-            run(p, a.baud, a.seconds); return
+            if run(p, a.baud, seconds): return
         except Exception as e:
             print(f"{p}: {e}")
-    print("no readable miner found — pass --port explicitly")
+    print("no readable miner found -- pass --port explicitly, and check the board is running the miner")
+    sys.exit(1)
 
 if __name__ == "__main__":
     main()

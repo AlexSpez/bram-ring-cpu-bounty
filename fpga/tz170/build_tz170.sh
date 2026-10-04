@@ -80,6 +80,9 @@ do_build() {
     cd "$SD"
     gather_rtl
     rm -f "$SD/${PROJECT}.peri.xml" "$SD/${PROJECT}.pt.sdc" "$SD/combined.sdc"
+    gen_project_xml      # BEFORE the interface step: the vendor API reads the project
+                         # file as it creates the design and otherwise prints
+                         # "File error : Efinity project file does not exists" seven times
     "$EFINITY_HOME/bin/python3" "$SD/interface_tz170.py"
     # direct-clock SDC: constrain clk at the characterization target (CLKDIV=1)
     local period
@@ -87,7 +90,6 @@ do_build() {
     printf 'create_clock -name clk -period %s [get_ports {clk}]\n' "$period" > "$SD/combined.sdc"
     : > "$SD/miner_defs.vh"
     printf '`define NRINGS %d\n`define CLKDIV 1\n' "$NRINGS" >> "$SD/miner_defs.vh"
-    gen_project_xml
     mkdir -p "$OUTFLOW"
     rm -f "$OUTFLOW/${PROJECT}.bit" "$OUTFLOW/${PROJECT}.timing.rpt"   # never grade a leftover
     "$EFX_RUN" --prj "$SD/${PROJECT}.xml" -f compile

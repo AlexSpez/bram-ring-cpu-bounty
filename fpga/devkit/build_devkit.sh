@@ -85,13 +85,15 @@ do_build() {
     : "${PLL_MHZ:?PLL_MHZ required (e.g. PLL_MHZ=95)}"
     gather_rtl
     rm -f "$SD/${PROJECT}.peri.xml" "$SD/${PROJECT}.pt.sdc" "$SD/combined.sdc"
+    gen_project_xml      # BEFORE the interface step: the vendor API reads the project
+                         # file as it creates the design and otherwise prints
+                         # "File error : Efinity project file does not exists" seven times
     PLL_MHZ="$PLL_MHZ" "$EFINITY_HOME/bin/python3" "$SD/interface_devkit.py"
     local ptsdc="$SD/${PROJECT}.pt.sdc"; [ -f "$OUTFLOW/${PROJECT}.pt.sdc" ] && ptsdc="$OUTFLOW/${PROJECT}.pt.sdc"
     [ -f "$ptsdc" ] || { echo -e "${R}no pt.sdc from interface (PLL clk undefined)${N}"; exit 1; }
     { cat "$ptsdc"; echo "create_clock -name clk_ref -period 30.000 [get_ports {clk_ref}]"; } > "$SD/combined.sdc"
     printf '`define PLL\n`define PLL_CLK_HZ %d\n' "$(( ${PLL_MHZ%%.*} * 1000000 ))" > "$SD/miner_defs.vh"
     printf '`define NRINGS %d\n`define CLKDIV %d\n' "$NRINGS" "$CLKDIV" >> "$SD/miner_defs.vh"
-    gen_project_xml
     mkdir -p "$OUTFLOW"
     rm -f "$OUTFLOW/${PROJECT}.bit" "$OUTFLOW/${PROJECT}.timing.rpt"   # never grade a leftover
     "$EFX_RUN" --prj "$SD/${PROJECT}.xml" -f compile

@@ -1,0 +1,30 @@
+=== char build: tz170_miner on Tz170J484 C2, target 250 MHz, NRINGS=1 seed=2 ===
+Save db version: 20252999
+INFO: Create design...
+INFO: Create design...done.
+INFO: Check design...
+INFO: Check design...done.
+Writing out summary report file
+Writing out pinout file
+Writing out interface config file
+Writing out timing related file
+Writing out verilog template file
+Writing out option register file
+INFO: Save design...
+INFO: Save design...done.
+[interface_tz170.py] wrote <REPO>/fpga/tz170/tz170_miner.peri.xml (direct clk on J22)
+Running: efx_run_map.py tz170_miner --family Topaz --device Tz170J484 --project_xml <REPO>/fpga/tz170/tz170_miner.xml --output_dir outflow --opt root=tz170_miner --opt veri_options=verilog_mode=verilog_2k,vhdl_mode=vhdl_2008 work-dir=work_syn write_efx_verilog=on
+   map :	PASS 
+Running: efx_run_pt_unified.py tz170_miner Topaz Tz170J484 --output_dir outflow --timing_model C2 --project_xml <REPO>/fpga/tz170/tz170_miner.xml
+   interface :	PASS 
+Running: efx_run_pnr.py tz170_miner --prj <REPO>/fpga/tz170/tz170_miner.xml --family Topaz --device Tz170J484 --timing_model C2 --output_dir outflow --opt sdc_file=combined.sdc
+   pnr :	PASS 
+Running: efx_run_pgm.py tz170_miner --family Topaz --device Tz170J484 --output_dir outflow --opt mode=active width=1
+   pgm :	PASS 
+BUILD OK: <REPO>/fpga/tz170/outflow/tz170_miner.bit
+gnd-rewire grep clean
+Maximum possible analyzed clocks frequency
+ Clock Name  Period (ns)  Frequency (MHz)     Edge
+    clk         4.844        206.441         (R-R)
+
+Geomean max period: 4.844

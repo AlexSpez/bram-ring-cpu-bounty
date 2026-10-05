@@ -6,8 +6,10 @@ Contributed by the 2026-08-05 adversarial review pass (which also produced
 the current atomicExch kernel); ships so the ceiling in the README is
 reproducible on your own card rather than taken on faith.
 
-README.md:130 says the RTX 3070's *measured* random-RMW throughput is 137 GB/s
-(34% of streaming), flat from 64 MB to 768 MB of working set, implying a
+README.md ("Why the GPU can't catch up") says the RTX 3070's *measured*
+random-RMW throughput is ~137 GB/s (34% of streaming), flat from the real
+geometry (512 rows per lane) up to multi-GB working sets -- smaller working
+sets run faster -- implying a
 1,359 H/s wall (each hash does STEPS*B = 2048*768 = 1,572,864 dependent RMWs;
 each RMW costs a 32B sector read + 32B sector write = 64B).
 

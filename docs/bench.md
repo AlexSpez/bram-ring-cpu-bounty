@@ -10,6 +10,15 @@ make PY=/usr/bin/python3
 make race PY=/usr/bin/python3
 ```
 
+If such a toolchain's `setup.sh` has been sourced, `PYTHONHOME`/`PYTHONPATH`
+point even `/usr/bin/python3` at the wrong standard library (the symptom is
+`No module named 'encodings'`). Run repo python with those cleared — the
+Makefile already does this as `RUNPY`:
+
+```
+env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE /usr/bin/python3 host/verify_solution.py 0x4e708 16
+```
+
 ## Standalone solution verifier
 
 Outside the Makefile:

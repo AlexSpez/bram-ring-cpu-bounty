@@ -83,11 +83,11 @@ RTX 3070, Efinix Ti375 devkit):
 | competitor | hash rate | notes |
 |---|---|---|
 | CPU, naive, 20 threads | 131 H/s | one nonce per core, readable baseline |
-| CPU, AVX2 lane-parallel, best config | 805 H/s | the champion CPU attack (16 threads, pinned) |
+| CPU, AVX2 lane-parallel, best config | 822 H/s | the champion CPU attack (8 P-cores, pinned; 5-run mean) |
 | GPU, RTX 3070, best CUDA | 1,493 H/s | at the card's measured scattered-RMW wall (below) |
 | **FPGA, Ti375, 2 rings @ 95 MHz** | **74,233 H/s** | measured on silicon at full speed |
 
-That's **~50× the GPU and ~92× the CPU**, measured kernel against measured
+That's **~50× the GPU and ~90× the CPU**, measured kernel against measured
 silicon. Both software numbers are the best we know of *after* two independent
 adversarial passes were hired to beat them — both wins are merged; see
 [Beat us](#beat-us).
@@ -108,16 +108,19 @@ and running all 20 unpinned *loses* to 8 pinned P-cores. The measured curve
 | threads | config | H/s | scaling vs 1 core |
 |---|---|---|---|
 | 1 | — | 108 | 1.00× |
-| 4 | pinned P-cores | 414 | 0.96× |
-| 8 | pinned P-cores | 722 | 0.84× |
-| 16 | bound close | 805 | 0.47× |
-| 20 | unpinned | 715 | 0.33× |
+| 4 | pinned P-cores | 426 | 0.99× |
+| 8 | pinned P-cores | **822** | 0.95× |
+| 16 | bound close | 783 | 0.45× (bimodal: 740s or 800s run to run) |
+| 20 | unpinned | 704 | 0.33× |
 
-Reproduce the champion row with `OMP_NUM_THREADS=16 OMP_PROC_BIND=close
-cpu/verify_avx2`; the pinned rows use `taskset -c <P-core list>`.
+Every figure is a five-run mean on an idle box (BOUNTY.md, "How I measure").
+Reproduce the champion row with `OMP_NUM_THREADS=8 taskset -c 0,2,4,6,8,10,12,14
+cpu/verify_avx2` — on this part the P-core threads are the even CPUs 0–14
+(`lscpu -e` shows the pairs); the 16-thread row is
+`OMP_NUM_THREADS=16 OMP_PROC_BIND=close cpu/verify_avx2`.
 
 Read that honestly: **the function is NOT very memory-hard on a CPU in the
-1–8 core regime** — scaling there is 84–96%. Memory-hardness bites at the top
+1–8 core regime** — scaling there is 95–99%. Memory-hardness bites at the top
 end, where 16–20 concurrent nonces × ~1.5 MB overflows the shared 25 MB L3 and
 the curve turns over. Anyone quoting the 20-thread number as evidence of
 per-core cache pressure (we did, in an earlier version of this README) is
@@ -130,7 +133,7 @@ at its full 95 MHz clock — 100.1% of the cycle model — and found nonce
 `0x4e708`, which re-derives VALID against `spec.py`. On the cheap reference
 part (Tz170, one ring — the smallest miner floorplan that sets `B` for the
 network), timing closes at **201.8 MHz** on the slower production speed grade
-(STA-certified, best of the two shipped seeds — the other closes 199.8;
+(STA-closed, best of the two shipped seeds — the other closes 199.8;
 that's ~78.7k H/s from a ~$40 chip — silicon run pending).
 
 ### Why the GPU can't catch up
@@ -146,9 +149,14 @@ the same RTX 3070 and all on its **measured** 405 GB/s streaming bandwidth
 | sector-realistic | each scattered 4-byte access moves a 32-byte sector | **~4,000** |
 | **measured** | the card's *actual* scattered-RMW throughput: ~137 GB/s of sectors (34% of streaming) | **~1,360–1,400** |
 
+Per hash: `STEPS × B` = 1,572,864 dependent read-modify-writes. The rows
+charge 8 bytes (4 read + 4 written) or 64 bytes (two 32-byte sectors) per
+RMW against 405 GB/s, and the last row against the measured 137 GB/s.
+
 The third row is not a model — it's `gpu/rmw_wall.py`, a microbenchmark of
-the access pattern with no BRAM-ring code in it, flat across working sets;
-run it on your own card. **Our CUDA kernel does 1,493 H/s — at that wall,
+the access pattern with no BRAM-ring code in it, flat from the real geometry
+(512 rows per lane) upward — smaller working sets run faster, one reason
+`DEPTH` is the full block; run it on your own card. **Our CUDA kernel does 1,493 H/s — at that wall,
 and a hair over it, because `atomicExch` fuses each read-modify-write into
 one memory transaction.** So the honest statement is not "we're 13× faster
 than a bandwidth-perfect GPU"; it's:
@@ -173,15 +181,18 @@ improvement to the GPU or CPU champion, with the claim procedure and deadline.
 Read it before you start.
 
 **What counts as a win.** Your implementation must reproduce `vectors.txt`
-exactly — every vector, fold *and* full-state digest — and mine the unmodified
-function (`spec.py`, `vectors.txt` and `generate.py` are the definition; if you
-changed them, you optimized a different problem). Beyond that, anything goes:
-any language, any hardware, any trick.
+exactly — every column of every vector: pipe your output through
+`host/check_vectors.py` — on the unmodified function (`spec.py`,
+`vectors.txt` and `generate.py` are the definition; if you changed them, you
+optimized a different problem) and on a fresh epoch seed
+(`BRAM_EPOCH=<seed> make prove`). Beyond that, anything goes: any language,
+any hardware, any trick.
 
 **How to prove it, so nobody has to trust you:**
 
-1. `make prove` passes with your implementation in place (it exits non-zero if
-   any leg fails — try breaking one on purpose and watch it).
+1. `host/check_vectors.py` passes on your output, and `make prove` still
+   passes (both exit non-zero on any mismatch — try breaking one on purpose
+   and watch it).
 2. Report your rate with the exact command, the hardware, and how you avoided
    measuring a contended machine.
 3. Mine a real solution and publish the nonce:
@@ -189,8 +200,10 @@ any language, any hardware, any trick.
    spec alone. A winning nonce is a proof of work that anyone can check without
    trusting your kernel, your timings, or you.
 
-**Where to send it:** open a merge request, or publish it anywhere and send us
-the link — we will re-run it and update the table above with attribution. A
+**Where to send it:** the claim procedure, prizes and deadline are in
+[`BOUNTY.md`](BOUNTY.md) — rule 4: a reply to the announcement tweet or an
+email to <info@nodelabs.ca> carrying your commit hash. Negative results and
+anything else go to the same address; we re-run and credit here. A
 faster CPU or GPU kernel is the single most valuable contribution this repo
 can receive, and negative results ("I tried X, here's the profile showing why
 it loses") are nearly as valuable — we'll take those too.
@@ -228,7 +241,7 @@ Then from the repo root, `RACE_FPGA_PORT=/dev/ttyUSB2 make race` puts the
 board on the leaderboard. `fpga/top.v` is board-agnostic (clock in, UART out):
 porting to another Efinix part is a pinout + interface script, not RTL work —
 `fpga/tz170/` runs the same flow against the Tz170 reference part, where it
-closes timing at 201.8 MHz on the production speed grade (STA-certified;
+closes timing at 201.8 MHz on the production speed grade (STA-closed;
 that board's silicon run is pending).
 
 ## Layout
@@ -251,10 +264,12 @@ CLAUDE.md       boots a Claude session to help you verify all of this
 
 - Parameters (`B=768`, `W=20`, `DEPTH=512`, `STEPS=2048`, `NDSP=128`) are sized
   so one ring uses about 60% of a Tz170 (768 of its 1280 block RAMs and ~60% of
-  its logic cells, per the shipped place reports), the cheap reference part;
+  its logic cells — `fpga/tz170/results_c2_t250_2steplag_rebuild-2026-10-04/`),
+  the cheap reference part;
   bigger parts replicate rings (the Ti375 devkit above runs two, at 57%).
-- The Tz170 rate is STA-certified timing on the production speed grade, not yet
-  a silicon run; the Ti375 rate is a full-speed silicon measurement and the
+- The Tz170 rate is STA-closed timing on the production speed grade — Efinity's
+  static timing analysis with the vendor's timing model, not a measurement —
+  not yet a silicon run; the Ti375 rate is a full-speed silicon measurement and the
   cycle model they share is confirmed on-chip to 0.1%.
 - The GPU competitor needs an NVIDIA card + CuPy; other GPUs are skipped. A
   4090 (~2.25× bandwidth) halves the bandwidth-ceiling moat *by calculation* —

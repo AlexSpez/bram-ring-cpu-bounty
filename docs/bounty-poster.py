@@ -118,7 +118,7 @@ d.rectangle([0, cy0, W, cy1], fill=GOLD)
 text((W // 2, (cy0 + cy1) // 2), "PROVE ME WRONG. WIN 0.1 BTC.", BLACK(40), fill=DARK, anchor="mm")
 
 # ---------- footer ----------
-text((W // 2, 846), "+0.01 BTC every time you beat my GPU or CPU kernel by 10%   \u00b7   Deadline 30 Nov 2026   \u00b7   @PeterRizun",
+text((W // 2, 846), "+0.01 BTC every time you beat my GPU or CPU kernel by 10%   \u00b7   Deadline 4 Nov 2026   \u00b7   @PeterRizun",
      BOLD(19), fill=WHITE, anchor="mm")
 text((W // 2, 876), "Rules + code: git.nodelabs.ca/nexapow/bram-ring   \u00b7   Claim: reply to the tweet with your commit hash",
      MONO(21), fill=MUTED, anchor="mm")

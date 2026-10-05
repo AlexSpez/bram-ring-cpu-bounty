@@ -6,7 +6,7 @@ that claim is true. **I will pay 0.1 BTC to the first person who shows it is
 false**, and 0.01 BTC for each meaningful improvement to the GPU or CPU
 reference code along the way.
 
-**Deadline: claims must be posted, and their code made public, by 30 November
+**Deadline: claims must be posted, and their code made public, by 4 November
 2026, 23:59 Pacific Time (America/Los_Angeles).** A claim whose verification
 is still running at the deadline is not cut off: it is decided when that
 verification finishes. I may extend this offer by announcement, never shorten
@@ -230,8 +230,8 @@ ambiguous, I rule in the claimant's favour. Each decision is open to public
 objection for 7 days: reply to it in the thread, and I answer every objection
 in the thread before the decision is final.
 
-The prize pool is 0.2 BTC (0.1 + 10 × 0.01). The announcement carries a
-message signed by the address holding it. Because a claim made earlier may be
+The prize pool is 0.2 BTC (0.1 + 10 × 0.01), held at the address in "Proof
+of funds" below, with a message signed by that address. Because a claim made earlier may be
 revealed later, winners are settled after the deadline, once every claim has
 been verified, and no later than 60 days after the deadline; prizes are paid
 in BTC to an address the winner provides within 14 days of the final decision.
@@ -243,6 +243,24 @@ and I cannot pay anyone sanctions law forbids me to pay.
 **Negative results are welcome.** "I tried X; here is the profile showing why
 it loses" earns no BTC, but it will be credited in the README and saves the
 next person the trouble.
+
+## Proof of funds
+
+The prize pool sits at this address (0.20093990 BTC, confirmed in block
+970089):
+
+    bc1qtk8q5nsupm47kg5vz9turqacx8lg2whvxukpuj
+
+Message, signed by that address:
+
+    Peter Rizun holds the 0.2 BTC prize pool for the NEXA BRAM-ring bounty at this address. Rules: https://git.nodelabs.ca/nexapow/bram-ring/-/blob/main/BOUNTY.md 2026-10-05
+
+Signature:
+
+    HxALKo2u0bmkpOxC6Xdvb26yeMs/eT/flSNVaIFzLC9FL0GY4/oUkw+OJXS5sXVIRP9gER4LKmYl3ymHT21LrsY=
+
+Verify with Electrum or Sparrow ("verify message"): the signature is in the
+classic Bitcoin Signed Message format those wallets use for SegWit addresses.
 
 ## The frozen function
 

@@ -16,7 +16,7 @@ column of `vectors.txt` via `host/check_vectors.py` plus a fresh seed
 means, champion and claimant measured back to back in one session: GPU
 `blocks= 460` line, CPU eight pinned P-cores), priority by a reply
 to @PeterRizun's announcement tweet carrying the commit hash, deadline
-30 November 2026.
+4 November 2026.
 
 ## The one-command verification
 

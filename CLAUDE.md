@@ -14,8 +14,8 @@ checked against it. If the person is working toward a prize, read
 column of `vectors.txt` via `host/check_vectors.py` plus a fresh seed
 (`BRAM_EPOCH=<seed> make prove`), the "How I measure" protocol (five-run
 means: GPU `blocks= 460` line, CPU eight pinned P-cores), priority by a reply
-to @PeterRizun's announcement or an email to info@nodelabs.ca with the commit
-hash, deadline 30 November 2026.
+to @PeterRizun's announcement tweet carrying the commit hash, deadline
+30 November 2026.
 
 ## The one-command verification
 

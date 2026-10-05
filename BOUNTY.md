@@ -151,18 +151,12 @@ cannot obtain the hardware within 28 days I say so publicly and the claim
 waits rather than lapses. Improvement awards are verified only on my own
 reference RTX 3070 and i7-12700KF.
 
-**4. Claims and priority.** To make a claim, do either or both of these; the
-earlier one is your priority time:
-
-- reply to the announcement tweet from [@PeterRizun](https://x.com/PeterRizun)
-  (link to be added here when it is posted) with the **full 40-character git
-  commit hash** of your submission and the prize you are claiming; or
-- email the same two things to <info@nodelabs.ca> with the subject
-  `BRAM-ring claim`. I acknowledge every claim email publicly (hash and
-  time, nothing else) within 48 hours.
-
-Edited replies do not count; post a new one. Claims in the same minute rank
-by position in the tweet thread, then by email arrival.
+**4. Claims and priority.** To make a claim, reply to the announcement tweet
+from [@PeterRizun](https://x.com/PeterRizun) (link to be added here when it
+is posted) with the **full 40-character git commit hash** of your submission
+and the prize you are claiming. The reply's timestamp is your priority time;
+replies in the same minute rank by their position in the thread. Edited
+replies do not count; post a new one.
 
 You may publish your code immediately, or keep it private and publish it any
 time before the deadline. Because the commit hash fixes your code exactly, you

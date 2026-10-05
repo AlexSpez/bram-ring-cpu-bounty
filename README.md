@@ -201,9 +201,9 @@ any hardware, any trick.
    trusting your kernel, your timings, or you.
 
 **Where to send it:** the claim procedure, prizes and deadline are in
-[`BOUNTY.md`](BOUNTY.md) — rule 4: a reply to the announcement tweet or an
-email to <info@nodelabs.ca> carrying your commit hash. Negative results and
-anything else go to the same address; we re-run and credit here. A
+[`BOUNTY.md`](BOUNTY.md) — rule 4: a reply to the announcement tweet carrying
+your commit hash. Negative results go in the same thread, as a reply with a
+link to what you published; we re-run and credit them here. A
 faster CPU or GPU kernel is the single most valuable contribution this repo
 can receive, and negative results ("I tried X, here's the profile showing why
 it loses") are nearly as valuable — we'll take those too.

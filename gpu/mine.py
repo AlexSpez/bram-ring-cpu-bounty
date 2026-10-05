@@ -29,6 +29,7 @@ repo -- the moat claim rests on this number being the best anyone can do.
 
   python3 mine.py            # verify + benchmark
   python3 mine.py warmup     # just compile the kernels
+  python3 mine.py vectors | python3 ../host/check_vectors.py   # the 4-column proof a claimant ships
 """
 import sys, os, time, hashlib
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -242,6 +243,14 @@ if __name__ == "__main__":
         run(0, MINE_K); print("kernels compiled"); sys.exit(0)
     if len(sys.argv) > 1 and sys.argv[1] == "mine":
         mine_loop(int(sys.argv[2], 16) if len(sys.argv) > 2 else 0); sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1] == "vectors":        # vectors.txt's 4 columns, from this kernel
+        with open(os.path.join(os.path.dirname(__file__), "..", "vectors.txt")) as f:
+            nonces = [int(l.split()[0], 16) for l in f if not l.startswith("#") and l.strip()]
+        for n in nonces:
+            gf, gs = run_states(n, 1)
+            print(f"{n:016x} {hashlib.sha256(spec.pack(gs[0])).hexdigest()} {int(gf[0]):08x} "
+                  + "".join(f"{int(v):0{(W+3)//4}x}" for v in gs[0][::-1]))
+        sys.exit(0)
 
     dev = cp.cuda.Device()
     name = cp.cuda.runtime.getDeviceProperties(dev.id)["name"].decode()

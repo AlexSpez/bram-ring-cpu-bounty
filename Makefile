@@ -100,6 +100,7 @@ prove: bench
 	@rm -f .prove_skip_rtl .prove_skip_gpu      # never inherit a stale marker
 	@cd cpu && ./simple
 	@cd cpu && ./verify_avx2
+	@cd cpu && ./verify_avx2 vectors | $(RUNPY) ../host/check_vectors.py
 	@cd cpu && ./simple avalanche
 	@if command -v iverilog >/dev/null 2>&1; then \
 	  cd fpga && iverilog -o tb_vectors.vvp tb_vectors.v ring.v efx_ram10_model.v && vvp tb_vectors.vvp \
@@ -107,6 +108,8 @@ prove: bench
 	else echo RTL > .prove_skip_rtl; echo "!! iverilog missing -- RTL leg NOT CHECKED"; fi
 	@if env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(GPY) -c "import cupy" >/dev/null 2>&1; then \
 	  env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(GPY) gpu/mine.py \
+	    && env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(GPY) gpu/mine.py vectors \
+	       | env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(GPY) host/check_vectors.py \
 	    || { echo "CUDA LEG FAILED"; exit 1; }; \
 	else echo CUDA > .prove_skip_gpu; echo "!! cupy/NVIDIA GPU missing -- CUDA leg NOT CHECKED (cupy in a venv? re-run: make prove GPU_PY=/path/to/venv/bin/python)"; fi
 	@echo ""

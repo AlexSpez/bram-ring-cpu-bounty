@@ -41,6 +41,7 @@
  *   ./verify_avx2            # verify against the golden vectors + benchmark
  *   ./verify_avx2 mine 0     # mine, emitting SHARE lines for race.py
  *   ./verify_avx2 fold <nonce-hex> [count]   # fast fold of specific nonces
+ *   ./verify_avx2 vectors | python3 ../host/check_vectors.py   # the 4-column proof a claimant ships
  */
 #include <stdlib.h>
 #include <stdint.h>
@@ -263,6 +264,21 @@ int main(int argc, char **argv)
 {
     if (argc > 1 && !strcmp(argv[1], "mine"))
         return mine(argc > 2 ? strtoull(argv[2], 0, 16) : 0);
+    if (argc > 1 && !strcmp(argv[1], "vectors")) {   /* print vectors.txt's 4 columns for its nonces */
+        FILE *vf = fopen("../vectors.txt","r"); if(!vf) vf = fopen("vectors.txt","r");
+        if (!vf) { fprintf(stderr, "vectors.txt missing\n"); return 1; }
+        static char vl[8192];
+        while (fgets(vl, sizeof vl, vf)) {
+            if (vl[0]=='#') continue;
+            char vn[32]; if (sscanf(vl, "%31s", vn) != 1) continue;
+            uint64_t n = strtoull(vn, 0, 16); uint32_t o[B]; char dg[65];
+            hash_state(n, o); state_digest(o, dg);
+            printf("%016llx %s %08x ", (unsigned long long)n, dg, difficulty_value(o));
+            for (int b = B - 1; b >= 0; b--) printf("%0*x", (W + 3) / 4, o[b]);
+            printf("\n");
+        }
+        fclose(vf); return 0;
+    }
     if (argc > 2 && !strcmp(argv[1], "fold")) {
         uint64_t n0 = strtoull(argv[2], 0, 16);
         int cnt = (argc > 3) ? atoi(argv[3]) : 1;

@@ -2,14 +2,17 @@
 
 A proof-of-work function **tailored to run fast on a cheap FPGA and slow on
 CPUs and GPUs** — with a race you can run to watch it happen, and a standing
-invitation: **beat the FPGA if you can.**
+invitation with money on it: **beat the FPGA and win 0.1 BTC**
+([`BOUNTY.md`](BOUNTY.md)).
 
-Every chip does logic; that's a commodity. The scarce resource is *memory*.
-This function gives every nonce its own pile of small RAMs and reads and writes
-them at data-dependent addresses every step. An FPGA has hundreds of
-independent single-cycle RAM blocks wired next to its logic, so it does this for
-free; a CPU or GPU has to fake those RAMs out of one shared memory system and
-chokes once it runs enough nonces in parallel to keep its ALUs busy.
+Logic is cheap, and so is memory. What's scarce is *random-access bandwidth
+between them*: how many independent, data-dependent memory accesses a chip can
+serve every cycle. This function gives every nonce its own pile of small RAMs
+and reads and writes them at data-dependent addresses every step. An FPGA has
+hundreds of independent single-cycle RAM blocks, each with its own port, wired
+next to its logic, so it does this for free; a CPU or GPU has to fake those
+RAMs out of one shared memory system and chokes once it runs enough nonces in
+parallel to keep its ALUs busy.
 
 The whole function is one readable file of Python — **[`spec.py`](spec.py)** —
 and every other implementation (C, CUDA, Verilog) is checked against it

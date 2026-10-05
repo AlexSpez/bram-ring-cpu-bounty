@@ -16,7 +16,7 @@ this is fast on an FPGA and slow on a CPU/GPU. Four deliberate choices:
      L2 and any GPU cache-resident kernel toward its DRAM-bandwidth ceiling.
 
   2. DEEP RUNS.  STEPS=2048: one hash = DEPTH-cycle fill + STEPS-cycle run
-     ~= 2562 cycles, so the data-dependent memory phase dominates the hash
+     = 2563 cycles, so the data-dependent memory phase dominates the hash
      (the fill amortizes to ~20%) and the whole hash paces co-resident
      logic on a production miner die.
 
@@ -37,7 +37,7 @@ this is fast on an FPGA and slow on a CPU/GPU. Four deliberate choices:
      recomputing bank entry k lazily requires the whole ring's history up
      to step k (B*k work), not one lane's private chain.
 
-Run me:   python3 spec.py       # prints (nonce -> digest); ~minutes per hash
+Run me:   python3 spec.py       # prints (nonce -> digest); ~15 s per hash
 """
 import hashlib
 import os
@@ -55,14 +55,16 @@ W     = 20    # bits per lane, and per RAM entry (RAM10 native width)
 DEPTH = 512   # entries per RAM bank (RAM10 native depth at W=20 -- full block)
 ADDR  = 9     # address bits (2**ADDR == DEPTH)
 REACH = 8     # a local tap comes from a lane within +-REACH
-STEPS = 2048  # steps per hash; DEPTH + STEPS + overhead ~= 2562 cycles
+STEPS = 2048  # steps per hash; DEPTH + STEPS + overhead = 2563 cycles
 NDSP  = 128   # DSP multipliers per core (power of two, easy to explain;
               # comfortably inside the Tz170's DSP count)
 PTAPS = 4     # cells per lane whose remote tap reads a product bit
 PBITLO, PBITHI = 8, 33  # product bits eligible as taps (the well-mixed middle)
 EPOCH = os.environ.get("BRAM_EPOCH", "epoch0")  # the seed; another string is another
                                                 # epoch (BRAM_EPOCH=<seed> make prove)
-# The previous-block hash / job seed (see spec.py for why it isn't re-hashed).
+# The previous-block hash / job seed. It is XOR-spread into the initial state
+# (init_heads) rather than hashed again, so the hot loop has no SHA: SHA-256
+# touches only the final state (digest) and the block header on the host.
 PREV = int.from_bytes(hashlib.sha256(b"bram-ring:prev-block-0").digest(), "little")
 
 
@@ -159,7 +161,8 @@ def epoch_const(seed):
 
 def init_heads(seed, nonce):
     """Seed the ring: xorshift64 carries the nonce, XOR spread-PREV commits the
-    block. Identical to spec.py (B is just larger)."""
+    block. Lane b takes the low W bits of the b-th xorshift output, XORed with
+    a W-bit window of PREV starting at bit (b*W) mod 256."""
     MASK = (1 << 64) - 1
     s = (nonce ^ epoch_const(seed)) & MASK
     mask = (1 << W) - 1
@@ -178,7 +181,7 @@ def epoch_tables(seed):
                           kind 1: bit y of product x (y in [PBITLO, PBITHI])
        MULA/MULB/MULC[j]: DSP j's two operand lanes and 32-bit added constant
        ADDR_BITS[b]     : which ADDR bits of a lane's value form its RAM address
-    A new epoch = a new bitstream, exactly as in spec.py."""
+    A new epoch = a new bitstream."""
     rules = approved_rules()
     palette = [rules[(i * len(rules)) // 256] for i in range(256)]
     xof = hashlib.shake_256(seed.encode()).digest(
@@ -225,7 +228,7 @@ def epoch_tables(seed):
 
 
 def approved_rules():
-    """The 4-input truth tables allowed as cell rules (== spec.py: balanced,
+    """The 4-input truth tables allowed as cell rules (balanced,
     nonlinearity 4, all-input-dependent, degree 3, SAC; exactly 1056)."""
     def nonlinearity(tt):
         best = 16

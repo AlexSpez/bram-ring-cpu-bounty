@@ -28,7 +28,7 @@ python3 host/verify_solution.py <nonce-hex> <difficulty-bits>
 ```
 
 e.g. `python3 host/verify_solution.py 0x4e708 16`. The pure-Python
-re-derivation takes minutes per hash at these parameters; for a fast
+re-derivation takes ~15 s per hash on a fast core; for a fast
 check, `cpu/verify_avx2 fold <nonce-hex>` computes the same 32-bit fold
 in ~12 ms (and is itself proven bit-exact against the spec by
 `make prove`).

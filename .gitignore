@@ -3,6 +3,7 @@ cpu/simple
 cpu/verify_avx2
 *.o
 .gen.stamp
+.gen.epoch
 __pycache__/
 *.pyc
 *.vvp

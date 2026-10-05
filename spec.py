@@ -40,6 +40,7 @@ this is fast on an FPGA and slow on a CPU/GPU. Four deliberate choices:
 Run me:   python3 spec.py       # prints (nonce -> digest); ~minutes per hash
 """
 import hashlib
+import os
 
 # ---- parameters (sized so one core uses about 60% of a Tz170, the cheap
 # ---- reference part; bigger chips replicate cores) ----
@@ -59,7 +60,8 @@ NDSP  = 128   # DSP multipliers per core (power of two, easy to explain;
               # comfortably inside the Tz170's DSP count)
 PTAPS = 4     # cells per lane whose remote tap reads a product bit
 PBITLO, PBITHI = 8, 33  # product bits eligible as taps (the well-mixed middle)
-EPOCH = "epoch0"
+EPOCH = os.environ.get("BRAM_EPOCH", "epoch0")  # the seed; another string is another
+                                                # epoch (BRAM_EPOCH=<seed> make prove)
 # The previous-block hash / job seed (see spec.py for why it isn't re-hashed).
 PREV = int.from_bytes(hashlib.sha256(b"bram-ring:prev-block-0").digest(), "little")
 

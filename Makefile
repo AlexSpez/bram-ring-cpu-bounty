@@ -4,6 +4,8 @@
 #   make race          run the live mining race   (default target: 20 leading-zero bits)
 #   make race DIFF=16  ... at a difficulty you choose; 16 = a ~2 min demo without an FPGA
 #   make prove         check Python == C == Verilog == CUDA, bit-for-bit
+#   BRAM_EPOCH=<seed> make prove   ... on another epoch seed (regenerates everything;
+#                      the bounty's fresh-seed check -- use a scratch clone)
 #   make clean
 #
 # Needs: python3 + a C compiler (always). iverilog for the RTL sim, cupy + an
@@ -26,7 +28,7 @@ GPY     = $(if $(GPU_PY),$(GPU_PY),$(PY))
 # 20 bits ~= 1M hashes: ~15 min with only CPU+GPU racing (~2 kH/s), seconds with an FPGA.
 DIFF   ?= 20
 
-.PHONY: all gen bench check warmup race prove sim clean
+.PHONY: all gen bench check warmup race prove sim clean FORCE
 
 all: bench warmup check
 
@@ -35,12 +37,21 @@ warmup: bench
 	@env -u PYTHONHOME -u PYTHONPATH -u PYTHONNOUSERSITE $(GPY) gpu/mine.py warmup >/dev/null 2>&1 \
 	  && echo "warmed up GPU kernels (make race will start fast)" || true
 
-# ---- generate every derived file from spec.py (only when spec/generator change) ----
+# ---- generate every derived file from spec.py (only when spec/generator/seed change) ----
+# The generated files (vectors.txt, cpu/tables.h, fpga/ring.v, ...) are shared by
+# every seed, so a marker records which seed they currently hold; its mtime moves
+# only when BRAM_EPOCH changes, and that is what triggers regeneration.
+BRAM_EPOCH ?= epoch0
+export BRAM_EPOCH
 GEN_STAMP = .gen.stamp
-$(GEN_STAMP): spec.py generate.py
+GEN_EPOCH = .gen.epoch
+$(GEN_EPOCH): FORCE
+	@[ "$$(cat $@ 2>/dev/null)" = "$(BRAM_EPOCH)" ] || echo "$(BRAM_EPOCH)" > $@
+$(GEN_STAMP): spec.py generate.py $(GEN_EPOCH)
 	@$(RUNPY) generate.py
 	@touch $@
 gen: $(GEN_STAMP)
+FORCE:
 
 # ---- build the CPU competitors (only when their sources or the tables change) ----
 bench: cpu/simple cpu/verify_avx2
@@ -114,4 +125,4 @@ sim: gen
 	cd fpga && iverilog -o tb_vectors.vvp tb_vectors.v ring.v efx_ram10_model.v && vvp tb_vectors.vvp
 
 clean:
-	rm -f cpu/simple cpu/verify_avx2 cpu/*.o $(GEN_STAMP) fpga/tb_vectors.vvp .prove_skip_rtl .prove_skip_gpu
+	rm -f cpu/simple cpu/verify_avx2 cpu/*.o .gen.stamp .gen.epoch fpga/tb_vectors.vvp .prove_skip_rtl .prove_skip_gpu

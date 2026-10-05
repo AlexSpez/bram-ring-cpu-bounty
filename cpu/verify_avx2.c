@@ -282,15 +282,22 @@ int main(int argc, char **argv)
     char line[8192]; int nv = 0;
     while (fgets(line, sizeof line, f)) {
         if (line[0]=='#') continue;
-        char nh[32], dig[80]; if (sscanf(line, "%31s %79s", nh, dig) != 2) continue;
+        /* every column: nonce, digest, 32-bit fold, raw state (lane B-1..0, (W+3)/4 hex each) */
+        static char nh[32], dig[80], fo[16], st[B * ((W + 3) / 4) + 64];
+        if (sscanf(line, "%31s %79s %15s %4000s", nh, dig, fo, st) != 4) continue;
         uint64_t nonce = strtoull(nh, 0, 16);
         uint32_t out[B]; char got[65];
         hash_state(nonce, out); state_digest(out, got);
-        if (strcmp(got, dig)) { printf("MISMATCH nonce %s\n  got %s\n  exp %s\n", nh, got, dig); return 1; }
+        if (strcmp(got, dig)) { printf("MISMATCH digest nonce %s\n  got %s\n  exp %s\n", nh, got, dig); return 1; }
+        uint32_t fv = difficulty_value(out), ef = (uint32_t)strtoul(fo, 0, 16);
+        if (fv != ef) { printf("MISMATCH fold nonce %s\n  got %08x\n  exp %08x\n", nh, fv, ef); return 1; }
+        static char raw[B * ((W + 3) / 4) + 1]; char *p = raw;
+        for (int b = B - 1; b >= 0; b--) p += sprintf(p, "%0*x", (W + 3) / 4, out[b]);
+        if (strcmp(raw, st)) { printf("MISMATCH state nonce %s\n", nh); return 1; }
         nv++;
     }
     fclose(f);
-    printf("verify_avx2.c == spec.py: %d/%d golden vectors bit-exact\n", nv, nv);
+    printf("verify_avx2.c == spec.py: %d/%d golden vectors bit-exact (digest, fold, full state)\n", nv, nv);
 
     int iters = 200; double t0 = now();
     for (int i = 0; i < iters; i++) { uint32_t out[B]; hash_state(i, out); }

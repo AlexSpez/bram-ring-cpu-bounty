@@ -131,7 +131,15 @@ static int avalanche(void)
     }
     printf("avalanche over %d nonce bit-flips: mean %.4f  min %.4f  max %.4f  (ideal 0.5)\n",
            n, tot/n, lo, hi);
-    return 0;
+    /* pass band: the mean within AV_MEAN_TOL of 0.5 and every flip inside [0.45, 0.55] --
+       a gate that cannot fail is not a gate (first-contact review, 2026-10-04) */
+#ifndef AV_MEAN_TOL
+#define AV_MEAN_TOL 0.01
+#endif
+    double dm = tot/n - 0.5; if (dm < 0) dm = -dm;
+    int ok = dm <= AV_MEAN_TOL && lo >= 0.45 && hi <= 0.55;
+    printf("avalanche %s (band: |mean-0.5| <= %.4g, every flip in [0.45, 0.55])\n", ok ? "PASS" : "FAIL", (double)AV_MEAN_TOL);
+    return ok ? 0 : 1;
 }
 
 /* 32-bit XOR fold of the bit-packed state (== spec.difficulty_value) */
@@ -214,15 +222,22 @@ int main(int argc, char **argv)
     char line[8192]; int nv = 0;
     while (fgets(line, sizeof line, f)) {
         if (line[0]=='#') continue;
-        char nh[32], dig[80]; if (sscanf(line, "%31s %79s", nh, dig) != 2) continue;
+        /* every column: nonce, digest, 32-bit fold, raw state (lane B-1..0, (W+3)/4 hex each) */
+        static char nh[32], dig[80], fo[16], st[B * ((W + 3) / 4) + 64];
+        if (sscanf(line, "%31s %79s %15s %4000s", nh, dig, fo, st) != 4) continue;
         uint64_t nonce = strtoull(nh, 0, 16);
         uint32_t out[B]; char got[65];
         hash_state(nonce, out); state_digest(out, got);
-        if (strcmp(got, dig)) { printf("MISMATCH nonce %s\n  got %s\n  exp %s\n", nh, got, dig); return 1; }
+        if (strcmp(got, dig)) { printf("MISMATCH digest nonce %s\n  got %s\n  exp %s\n", nh, got, dig); return 1; }
+        uint32_t fv = difficulty_value(out), ef = (uint32_t)strtoul(fo, 0, 16);
+        if (fv != ef) { printf("MISMATCH fold nonce %s\n  got %08x\n  exp %08x\n", nh, fv, ef); return 1; }
+        static char raw[B * ((W + 3) / 4) + 1]; char *p = raw;
+        for (int b = B - 1; b >= 0; b--) p += sprintf(p, "%0*x", (W + 3) / 4, out[b]);
+        if (strcmp(raw, st)) { printf("MISMATCH state nonce %s\n", nh); return 1; }
         nv++;
     }
     fclose(f);
-    printf("simple.c == spec.py: %d/%d golden vectors bit-exact\n", nv, nv);
+    printf("simple.c == spec.py: %d/%d golden vectors bit-exact (digest, fold, full state)\n", nv, nv);
 
     int NT = ncores();
     int iters = 100 * NT; double t0 = now();

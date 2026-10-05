@@ -45,7 +45,10 @@ fixed-function ASIC can't cheaply reproduce. One hash is 2563 cycles.
 
 The core — `make`, `make race` (CPU), `make prove` — needs only **Python 3** and
 a **C compiler with OpenMP**. `make prove` also uses **iverilog** for the RTL
-sim. The optional competitors need a little more (all in `requirements.txt`):
+sim. If `python3` on your PATH is an FPGA vendor's bundled interpreter, pass
+`PY=/usr/bin/python3 GPU_PY=/usr/bin/python3` to every `make`
+([docs/bench.md](docs/bench.md)). The optional competitors need a little more
+(all in `requirements.txt`):
 
 - **GPU** (NVIDIA): `pip install numpy cupy-cuda12x` (match your CUDA version),
   then run with `make race GPU_PY=/path/to/python`.
@@ -177,7 +180,8 @@ This repo exists to be beaten. If you make a **bit-exact** implementation
 faster than ours, you have found the moat's real width — and we want the
 number. **There is money on it:** [`BOUNTY.md`](BOUNTY.md) pays 0.1 BTC for
 non-FPGA hardware that reaches 371 H/s per dollar, and 0.01 BTC for each 10%
-improvement to the GPU or CPU champion, with the claim procedure and deadline.
+improvement to the GPU or CPU champion or for a verified halving of the work
+per hash (ten awards in all), with the claim procedure and deadline.
 Read it before you start.
 
 **What counts as a win.** Your implementation must reproduce `vectors.txt`
@@ -186,7 +190,12 @@ exactly — every column of every vector: pipe your output through
 `vectors.txt` and `generate.py` are the definition; if you changed them, you
 optimized a different problem) and on a fresh epoch seed
 (`BRAM_EPOCH=<seed> make prove`). Beyond that, anything goes: any language,
-any hardware, any trick.
+any hardware, any trick. The epoch tables for any seed are one call away for
+an implementation in any language:
+`python3 -c 'import json, spec; print(json.dumps(spec.epoch_tables(spec.EPOCH)))'`
+dumps RULE, TAP, the DSP operand lanes and constants, and ADDR_BITS as JSON;
+`cpu/verify_avx2 vectors` and `gpu/mine.py vectors` show the four-column
+output `host/check_vectors.py` expects.
 
 **How to prove it, so nobody has to trust you:**
 
@@ -195,7 +204,7 @@ any hardware, any trick.
    and watch it).
 2. Report your rate with the exact command, the hardware, and how you avoided
    measuring a contended machine.
-3. Mine a real solution and publish the nonce:
+3. Mine a real solution and publish the nonce (required for the 0.1 BTC prize):
    `python3 host/verify_solution.py <nonce> <target>` re-derives it from the
    spec alone. A winning nonce is a proof of work that anyone can check without
    trusting your kernel, your timings, or you.

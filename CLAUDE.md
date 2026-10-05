@@ -13,7 +13,8 @@ checked against it. If the person is working toward a prize, read
 10%-over-champion awards and the shortcut award, and the rules — every
 column of `vectors.txt` via `host/check_vectors.py` plus a fresh seed
 (`BRAM_EPOCH=<seed> make prove`), the "How I measure" protocol (five-run
-means: GPU `blocks= 460` line, CPU eight pinned P-cores), priority by a reply
+means, champion and claimant measured back to back in one session: GPU
+`blocks= 460` line, CPU eight pinned P-cores), priority by a reply
 to @PeterRizun's announcement tweet carrying the commit hash, deadline
 30 November 2026.
 

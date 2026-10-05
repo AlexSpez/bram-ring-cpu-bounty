@@ -7,9 +7,10 @@ false**, and 0.01 BTC for each meaningful improvement to the GPU or CPU
 reference code along the way.
 
 **Deadline: claims must be posted, and their code made public, by 30 November
-2026, 23:59 Pacific Time.** A claim still under verification at the deadline
-keeps its place; its own deadline is its decision. I may extend this offer by
-announcement, never shorten it.
+2026, 23:59 Pacific Time (America/Los_Angeles).** A claim whose verification
+is still running at the deadline is not cut off: it is decided when that
+verification finishes. I may extend this offer by announcement, never shorten
+it.
 
 ## The target
 
@@ -70,45 +71,64 @@ reference **RTX 3070**, under the protocol in "How I measure" below.
 measures at least **10% above** the current champion (822 H/s) on the
 reference **Intel i7-12700KF**, under the same protocol.
 
-**0.01 BTC: a real shortcut.** A bit-exact implementation that demonstrably
-halves the work per hash — half the memory operations or half the arithmetic,
-shown on the reference machine against the champion of its class — earns
-0.01 BTC even if it reaches neither the target nor a 10% speed-up. Partial
-outputs do not count: the function's output is the full SHA-256 digest.
+**0.01 BTC: a real shortcut.** A bit-exact implementation that does at most
+half the work per hash of the specification — counted, not timed. The
+specification performs `STEPS × B` = 1,572,864 bank read-modify-writes and
+`STEPS × B × W` = 31,457,280 cell evaluations per hash; you show, with an
+instrumented build I can run, that yours needs half of either. This award is
+separate from the speed awards: it needs no speed-up, it does not make your
+implementation the champion, and it does not move the bar. Partial outputs do
+not count: the function's output is the full SHA-256 digest.
 
-Improvement awards are decided after the deadline, in order of claim time: a
-verified claim earns 0.01 BTC if it measures at least 10% above the champion
-at that point (the figures above, or the **measured** rate of the most recent
-verified winner), and then becomes the new champion. Limited to 10
-improvement awards in total, GPU, CPU and shortcut awards together.
+Speed awards ratchet, in order of claim time: a verified claim earns 0.01 BTC
+if it measures at least 10% above the champion at that point — initially the
+shipped kernel, afterwards the most recent verified winner — and then becomes
+the new champion. The bar only rises. Worked example: the shipped GPU kernel
+measures 1,493 in a session; A claims first and measures 1,650 (+10.5%), so A
+wins and is champion; B claims later and measures 1,700, which is +3% over A,
+so B wins nothing; C measures 1,850, +12% over A, so C wins. Limited to 10
+awards in total, speed and shortcut awards together.
 
 **The bar can move while you work.** A claim may stay sealed (hash posted, code
 private) until the deadline, so the champion you are measured against may be a
 claim you cannot see yet. Treat the published figures as a floor, not the bar:
 a kernel 10% faster than 1,493 H/s is not guaranteed a prize if an earlier
 sealed claim already beat it by more. Posting your own commit hash early is
-what protects your place in that order. Only verified claims move the bar; a
-claim that fails verification never does. I publish every verified rate (the
-number, not the code) within 14 days of verifying it, so the current bar is
-always public even while the code behind it is not.
+what protects your place in that order. Verification does not wait for the
+deadline: it starts as soon as a claim's code is public, and I post every
+verified rate (the number, not the code) as a reply in the announcement
+thread within 14 days of the code going public. So the bar set by every
+unsealed claim is public; only sealed claims are invisible, and only until
+their authors unseal them. Only verified claims move the bar; a claim that
+fails verification never does. Sitting on a sealed claim is a bet that nobody
+unseals a bigger one first.
 
 ## How I measure
 
-Every rate in this document, the champions included, is produced the same
-way: on the reference machine (i7-12700KF, RTX 3070, Ubuntu, nothing else
-running), five runs, arithmetic mean.
+Every rate in this document is produced the same way: on the reference
+machine (i7-12700KF, RTX 3070, Ubuntu 24.04, nothing else running), five
+runs, arithmetic mean. A run hashes at least 920 nonces on the GPU or 800 on
+the CPU, timed wall-clock from the first nonce to the last, excluding one-time
+setup (table generation, kernel compilation) and including everything done per
+nonce (fill, run, SHA-256 digest).
 
 - **GPU:** `python3 gpu/mine.py` — the `blocks= 460` line of its benchmark.
 - **CPU:** `OMP_NUM_THREADS=8 taskset -c 0,2,4,6,8,10,12,14 cpu/verify_avx2`
-  — the "CPU 8 cores" line. That is the eight P-cores pinned, which beats
-  every other configuration on this part and is the least noisy (the
-  README's thread table has the alternatives).
+  — the "CPU 8 cores" line: the eight P-cores pinned, which beats every other
+  configuration on this part and is the least noisy (the README's thread
+  table has the alternatives; on another machine the P-core list differs).
 
-Your implementation is measured with the equivalent command for your code.
-You may ship a benchmark script; if it disagrees with this protocol, the
-protocol decides. The award is decided on that measured mean and nothing
-else; the number you claimed is only what you are asked to reproduce. If the
-mean lands within 2% of the bar, twenty more runs decide it.
+The published figures (1,493 and 822) are indicative. In each verification
+session I measure the current champion and your implementation **back to
+back**, under the same conditions, and your bar is 10% above the champion's
+mean from that session, so drift in the machine (thermals, drivers, the day)
+cancels. Your implementation needs a benchmark entry point that meets the run
+definition above; ship it with your code, and I read it before I trust it.
+The award is decided on that measured mean and nothing else; the number you
+claimed is only what you are asked to reproduce. If your mean lands within 2%
+of the bar, I replace both means with twenty-run means and decide on those.
+The software state of the reference machine (kernel, driver, CUDA and
+compiler versions) is recorded in every published decision.
 
 ## Rules
 
@@ -126,70 +146,99 @@ Your code must also take the epoch seed as an input. Tables, constants and
 generated code may be precomputed from the seed, and that precompute is not
 timed, but nothing may depend on the seed being `epoch0`. The repo supports
 this: `BRAM_EPOCH=<seed> make prove` regenerates every table, vector and
-kernel for another seed. Once your code is public I publish a fresh seed, and
-you have 48 hours to show the same bit-exact result on it.
+kernel for another seed (do it in a scratch clone: it rewrites the generated
+files, and your claim commit must keep the published ones). The seed is any
+string; it reaches `spec.py` through the `BRAM_EPOCH` environment variable
+and `hashlib.shake_256(seed.encode())`. Once your code is public I post a
+fresh random seed as a reply in the announcement thread; the 48 hours start
+at that reply, and "the same bit-exact result" means `host/check_vectors.py`
+passes against the vectors I generate for that seed. Speed is judged on
+`epoch0` only.
 
 **2. Hardware cost.** The price is the retail price, **new**, of the hardware
-doing the hashing: for a GPU or accelerator card, the card; for a CPU claim,
-the CPU; for an integrated device (a Mac, an APU board, an NPU development
-board), the whole unit; and memory counts whenever your method needs more
-than the device ships with. A separate host that only feeds a card
-(motherboard, power supply, host CPU) and energy are excluded. The price is
-the lowest in-stock, fixed-price, first-party listing at Amazon, Newegg, B&H,
-Best Buy or Micro Center, or the manufacturer's own store, at any time in the
-30 days before the claim, evidenced by a dated URL or screenshot in your
-commit. Used, refurbished, surplus, marketplace-seller and grey-market prices
-do not count, and hardware with no such listing cannot be claimed. A
-multi-device rig counts total hash rate over total device price, provided
-every device is in your possession at that price. The FPGA side is fixed at
-$100 per Tz170-equivalent, as above.
+doing the hashing:
+
+- a GPU or accelerator card: the card (its own memory is part of it);
+- a CPU claim: the CPU plus the RAM your method uses, priced as the cheapest
+  qualifying listing for that capacity of standard memory;
+- an integrated device (a Mac, an APU board, an NPU development board, a
+  laptop): the whole unit as sold;
+- a separate host that only feeds a card (motherboard, power supply, host
+  CPU), and energy: excluded. If the host does any of the hashing, it is a
+  device and is priced.
+
+A qualifying listing is the exact SKU, in stock, at a fixed price before tax
+and shipping, sold and shipped by Amazon, Newegg, B&H, Best Buy or Micro
+Center themselves (not a marketplace seller) or by the manufacturer's own
+store, at any time in the 30 days before the claim and in stock at that price
+for at least 24 hours, evidenced by a dated screenshot or an archive.org
+capture in your commit. Used, refurbished, surplus and grey-market prices do
+not count; hardware with no qualifying listing cannot be claimed. A
+multi-device rig counts total hash rate over total device price, every device
+in your possession at the claimed price. "FPGA" means a device whose logic is
+configured by a bitstream, including eFPGA fabric inside an SoC; CGRA, AI
+engine and NPU arrays are not FPGAs. The FPGA side of the comparison is fixed
+at $100 per Tz170-equivalent, as above.
 
 **3. Verification.** I re-run your published code on the claimed hardware
-model, which I will buy or rent, or you may give me access, under the
-protocol in "How I measure". The decision rests on my measured mean. If I
-cannot obtain the hardware within 28 days I say so publicly and the claim
-waits rather than lapses. Improvement awards are verified only on my own
-reference RTX 3070 and i7-12700KF.
+model under the protocol in "How I measure". I buy or rent hardware up to
+$3,000 per claim; above that, or if I cannot obtain it within 28 days, you
+give me access to yours (remote is fine) and I run the protocol there. If
+neither has happened 56 days after your code went public, the claim is
+decided on the evidence in your commit, the five-run log and the mined nonce,
+and the decision says so. The decision rests on my measured mean. Speed
+awards are verified only on my own reference RTX 3070 and i7-12700KF.
 
 **4. Claims and priority.** To make a claim, reply to the announcement tweet
 from [@PeterRizun](https://x.com/PeterRizun) (link to be added here when it
 is posted) with the **full 40-character git commit hash** of your submission
 and the prize you are claiming. The reply's timestamp is your priority time;
-replies in the same minute rank by their position in the thread. Edited
-replies do not count; post a new one.
+replies in the same minute rank by tweet ID, lower first. Edited replies do
+not count; post a new one. A reply you later delete or hide no longer counts.
+Should X become unusable, the replacement channel is announced in this
+repository's README and existing claims keep their times.
 
 You may publish your code immediately, or keep it private and publish it any
-time before the deadline. Because the commit hash fixes your code exactly, you
-can establish priority without revealing your method. The commit must contain
-everything needed to reproduce the result: code, build instructions, and, for
-the 0.1 BTC prize, evidence of the hardware's price. A claim whose commit is
-not public by the deadline lapses. For the 0.1 BTC prize, if two valid claims
-qualify, the earlier claim wins; improvement awards ratchet as described
-above.
+time before the deadline, on any public git host. Because the commit hash
+fixes your code exactly, you can establish priority without revealing your
+method. The commit must contain everything needed to reproduce the result:
+code, build instructions, your benchmark entry point, your licence, and, for
+the 0.1 BTC prize, the hardware's price evidence, your five-run log and one
+mined nonce that `host/verify_solution.py` accepts. A packaging slip (a
+missing dependency, a wrong path) gets one 72-hour cure; the code, the
+numbers and the hash do not. A claim whose commit is not public by the
+deadline lapses. For the 0.1 BTC prize, if two valid claims qualify, the
+earlier claim wins; speed awards ratchet as described above.
 
 **5. What does not count.**
 - Custom ASICs that are not commercially available.
 - Changes to the function or the vectors (rule 1).
 - Hardware that cannot be bought new.
-- Rented clusters presented as single devices: the rate must come from the
-  hardware whose price you claim.
+- Rented or borrowed hardware presented as yours: the rate must come from
+  devices in your possession at the claimed price (rule 2).
+- Projections: every claimed rate is one you measured on hardware you have.
 
 **6. Judging and payout.** Claims are adjudicated by me, Peter Rizun, under
-the version of this document at the commit of this repository that your
-claim names — the rules cannot change under you. Every decision is published
-within 14 days of the claim's commit going public (28 days if I must buy
-hardware to verify it), together with the reproduction commands, logs and
-price evidence used. Claimants may observe the reproduction run. Where a rule
-is genuinely ambiguous, I rule in the claimant's favour. Each decision is
-open to public objection for 7 days before it is final.
+the text of this document on this repository's `main` branch at the moment of
+your reply. I may clarify this document afterwards, but a clarification never
+binds a claim made before it. Every decision is posted as a reply in the
+announcement thread within 14 days of the claim's code going public (28 days
+if I must buy hardware to verify it), with the reproduction commands, logs,
+the reference machine's software versions and the price evidence used.
+Claimants may observe the reproduction run. Where a rule is genuinely
+ambiguous, I rule in the claimant's favour. Each decision is open to public
+objection for 7 days: reply to it in the thread, and I answer every objection
+in the thread before the decision is final.
 
-Because a claim made earlier may be revealed later, the winners are settled
-after the deadline, once every claim has been verified, and paid in BTC to an
-address the winner provides within 14 days of the final decision. The
-announcement carries a message signed by the funding address holding the
-full prize pool. Winning code must be published under the MIT licence or any
-other OSI-approved licence. Anyone may claim except people who were paid for
-the earlier adversarial passes named in the README.
+The prize pool is 0.2 BTC (0.1 + 10 × 0.01). The announcement carries a
+message signed by the address holding it. Because a claim made earlier may be
+revealed later, winners are settled after the deadline, once every claim has
+been verified, and no later than 60 days after the deadline; prizes are paid
+in BTC to an address the winner provides within 14 days of the final decision.
+Winning code must be published under the MIT licence or any other
+OSI-approved licence, named in the frozen commit. Anyone may claim except
+people I have paid to work on this repository. Taxes are the winner's affair,
+and I cannot pay anyone sanctions law forbids me to pay.
 
 **Negative results are welcome.** "I tried X; here is the profile showing why
 it loses" earns no BTC, but it will be credited in the README and saves the
@@ -199,6 +248,6 @@ next person the trouble.
 
 SHA-256 of the three files that define it, as this document ships them:
 
-    1c5b0e9d2557a0a31b6c88a54b23ec8bdffd0370f2d8a10248af3c8f76fc5dee  spec.py
+    5596327c5fc89b4d87eaf64df0b25e8430a9b25247ebae4c3e1037c19cd2f292  spec.py
     20f78b63ff10f7b4fee681355190e91eaaeb527a733d2701d928eb0ac6534dab  generate.py
     d406e2319f21e641dc77fcf79693c88062cc312cd1d75f0c286fa4ba85cf88f1  vectors.txt

@@ -9,10 +9,13 @@ things, not explaining.
 
 Read [`spec.py`](spec.py) first — it *is* the function. Everything else is
 checked against it. If the person is working toward a prize, read
-[`BOUNTY.md`](BOUNTY.md) too: it defines the target (371 H/s per dollar),
-the 10%-over-champion improvement awards, and the rules — correctness under
-`make prove` plus a fresh epoch seed, mean hash rates measured by Peter on the
-reference RTX 3070 / i7-12700KF, priority by posted commit hash.
+[`BOUNTY.md`](BOUNTY.md) too: the target (371 H/s per dollar), the
+10%-over-champion awards and the shortcut award, and the rules — every
+column of `vectors.txt` via `host/check_vectors.py` plus a fresh seed
+(`BRAM_EPOCH=<seed> make prove`), the "How I measure" protocol (five-run
+means: GPU `blocks= 460` line, CPU eight pinned P-cores), priority by a reply
+to @PeterRizun's announcement or an email to info@nodelabs.ca with the commit
+hash, deadline 30 November 2026.
 
 ## The one-command verification
 
@@ -57,12 +60,12 @@ partial solutions. The GPU entrant runs under a CuPy-capable Python — pass
   CUDA on shared vectors. Change a byte of `vectors.txt` and watch it fail.
 - **Are the CPU/GPU numbers honest (not sandbagged)?** They're meant to be the
   *strongest* attacks, on all cores / the whole GPU.
-  - `cpu/verify_avx2.c` is the CPU champion (805 H/s at 16 pinned threads on
-    the reference box): AVX2 processes 8 lanes per instruction (deleting the
+  - `cpu/verify_avx2.c` is the CPU champion (822 H/s, eight pinned P-cores,
+    5-run mean on the reference box): AVX2 processes 8 lanes per instruction (deleting the
     compute tax) while the read-modify-writes stay scalar — that's the
     memory-hard part no vectorization removes. **Thread topology dominates**:
     on a hybrid CPU, 20 unpinned threads LOSE to 8 pinned P-cores. Help them
-    pin before they conclude anything about scaling. Scaling is 84–96% in the
+    pin before they conclude anything about scaling. Scaling is 95–99% in the
     1–8 core regime (the function is not very memory-hard there); it turns
     over at 16–20 threads when the aggregate working set overflows L3. Do NOT
     repeat the old "32% scaling proves per-core L2 pressure" claim — it was
@@ -86,7 +89,7 @@ partial solutions. The GPU entrant runs under a CuPy-capable Python — pass
   the cycle model** from the hardware hash counter, and latched solution nonce
   `0x4e708` (re-derives VALID). On the Tz170 reference part, `fpga/tz170/`
   builds one ring that closes timing at 201.8 MHz on the production speed
-  grade (~78.7k H/s) — present that one *as* STA-certified timing, silicon
+  grade (~78.7k H/s) — present that one *as* STA-closed timing, silicon
   pending, and keep the measured/certified distinction crisp.
 
 ## Environment quirks you will hit
@@ -136,5 +139,5 @@ resource FPGAs have in absurd abundance — independent single-cycle RAMs.
 - Keep the person's skepticism alive — the whole repo is built to be checkable,
   so check, don't reassure.
 - Cite what's measured vs certified vs calculated. The Ti375 rate is measured
-  silicon; the Tz170 rate is STA-certified timing; the bandwidth ceiling and
+  silicon; the Tz170 rate is STA-closed timing; the bandwidth ceiling and
   the 4090 extrapolation are calculations. Never blur those.

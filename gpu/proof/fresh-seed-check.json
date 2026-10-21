@@ -1,0 +1,117 @@
+{
+  "arguments": {
+    "baseline": "mine",
+    "blocks": 64,
+    "candidate": "packed_tiled",
+    "chunk_hashes": 0,
+    "hashes": 920,
+    "json_output": "work\\gpu-tile32-fresh.json",
+    "runs": 5,
+    "smoke": false,
+    "smoke_hashes": 4,
+    "smoke_repeats": 3,
+    "vector_output": "work\\gpu-tile32-fresh-proof.txt",
+    "vectors": "work\\bram-ring-fresh\\vectors.txt",
+    "vectors_only": true
+  },
+  "log": [
+    "COMPARE baseline=mine candidate=packed_tiled epoch='codex-check-2026-10-20-7c9f2d4e' blocks=64",
+    "VECTOR baseline  nonce=0000000000000000 digest=9cbecd87ed2562474c265cfad36e9bee63bdbefb02117b81f618859e573d3e4d fold=2d725c57 full_state=PASS",
+    "VECTOR baseline  nonce=0000000000000001 digest=f5f9ce5943e3945105c1bddd8fa4056fd2658c94ff96704785c311d381b80bd9 fold=9ee52988 full_state=PASS",
+    "VECTOR baseline  nonce=00000000deadbeef digest=29a382bfe1fa51d346e2d091bc49e9aa39673d01fe5290c1570bc72a409c4c19 fold=8d82ce28 full_state=PASS",
+    "VECTOR baseline  nonce=ffffffffffffffff digest=00975c4258e1b279536d56fe8b10446d7b662d4e2a87fe15bb4162f90894d5e8 fold=33b413d6 full_state=PASS",
+    "VECTOR baseline  nonce=8000000000000000 digest=27e6e51171c3d1262c60cfdd1f73f27fcc8afc9fc0aef35d32682b5cda1ae539 fold=dc12546a full_state=PASS",
+    "VECTOR baseline  nonce=0123456789abcdef digest=07888fa4f12eb55e65866e6fa4bb976ed30fc5565b951ab0aed1879c52cfa6b2 fold=0316103e full_state=PASS",
+    "VECTOR baseline  nonce=5555555555555555 digest=8a5c1e4aaeec5f10f0e79b5b333f8efe1d1a23c0befd9e6cb47edbea4bf7e4bc fold=cc5dbc28 full_state=PASS",
+    "VECTOR baseline  nonce=00000000ffffffff digest=751d13eb092d1544fe7f816cd28bfe841c267238f085008970524bb213cdce4d fold=2bd16232 full_state=PASS",
+    "PASS baseline: 8/8 vectors, every column bit-exact",
+    "VECTOR candidate nonce=0000000000000000 digest=9cbecd87ed2562474c265cfad36e9bee63bdbefb02117b81f618859e573d3e4d fold=2d725c57 full_state=PASS",
+    "VECTOR candidate nonce=0000000000000001 digest=f5f9ce5943e3945105c1bddd8fa4056fd2658c94ff96704785c311d381b80bd9 fold=9ee52988 full_state=PASS",
+    "VECTOR candidate nonce=00000000deadbeef digest=29a382bfe1fa51d346e2d091bc49e9aa39673d01fe5290c1570bc72a409c4c19 fold=8d82ce28 full_state=PASS",
+    "VECTOR candidate nonce=ffffffffffffffff digest=00975c4258e1b279536d56fe8b10446d7b662d4e2a87fe15bb4162f90894d5e8 fold=33b413d6 full_state=PASS",
+    "VECTOR candidate nonce=8000000000000000 digest=27e6e51171c3d1262c60cfdd1f73f27fcc8afc9fc0aef35d32682b5cda1ae539 fold=dc12546a full_state=PASS",
+    "VECTOR candidate nonce=0123456789abcdef digest=07888fa4f12eb55e65866e6fa4bb976ed30fc5565b951ab0aed1879c52cfa6b2 fold=0316103e full_state=PASS",
+    "VECTOR candidate nonce=5555555555555555 digest=8a5c1e4aaeec5f10f0e79b5b333f8efe1d1a23c0befd9e6cb47edbea4bf7e4bc fold=cc5dbc28 full_state=PASS",
+    "VECTOR candidate nonce=00000000ffffffff digest=751d13eb092d1544fe7f816cd28bfe841c267238f085008970524bb213cdce4d fold=2bd16232 full_state=PASS",
+    "PASS candidate: 8/8 vectors, every column bit-exact",
+    "Wrote candidate vector proof: work\\gpu-tile32-fresh-proof.txt",
+    "METADATA {\"B\": 768, \"DEPTH\": 512, \"MINE_K\": {\"baseline\": 1, \"candidate\": 1}, \"NDSP\": 128, \"STEPS\": 2048, \"W\": 20, \"chunk_hashes\": 0, \"compute_capability\": \"75\", \"cuda_driver\": 13020, \"cuda_runtime\": 12090, \"cupy\": \"14.2.0\", \"device_id\": 0, \"device_name\": \"NVIDIA T1200 Laptop GPU\", \"epoch\": \"codex-check-2026-10-20-7c9f2d4e\", \"kernel_attributes\": {\"baseline\": {\"binary_version\": 75, \"cache_mode_ca\": 0, \"const_size_bytes\": 0, \"local_size_bytes\": 0, \"max_dynamic_shared_size_bytes\": 41980, \"max_threads_per_block\": 768, \"num_regs\": 80, \"preferred_shared_memory_carveout\": -1, \"ptx_version\": 75, \"shared_size_bytes\": 7172}, \"candidate\": {\"binary_version\": 75, \"cache_mode_ca\": 0, \"const_size_bytes\": 0, \"local_size_bytes\": 0, \"max_dynamic_shared_size_bytes\": 41980, \"max_threads_per_block\": 768, \"num_regs\": 80, \"preferred_shared_memory_carveout\": -1, \"ptx_version\": 75, \"shared_size_bytes\": 7172}}, \"module_configuration\": {\"baseline\": {}, \"candidate\": {\"BANK_TILE\": 32, \"BANK_WORDS_PER_NONCE\": 393216, \"MIN_BLOCKS\": 2, \"TAP_LAYOUT\": \"column\", \"UNROLL_TAPS\": 1, \"VARIANT\": \"packed_tiled\"}}, \"module_sha256\": {\"baseline\": \"1d4193c681d094fb580b29ad3d2abbee14c692644f976e0c8ab072451b6a49f8\", \"candidate\": \"09f9c4d119388b6ade0ca85ae3c01d1b495a49bf2766d05194803b0f54ce4358\"}, \"modules\": {\"baseline\": \"C:\\\\Users\\\\PCUser\\\\Documents\\\\Codex\\\\2026-10-20\\\\https-x-com-peterrizun-status-2107245548311060888\\\\work\\\\bram-ring\\\\gpu\\\\mine.py\", \"candidate\": \"C:\\\\Users\\\\PCUser\\\\Documents\\\\Codex\\\\2026-10-20\\\\https-x-com-peterrizun-status-2107245548311060888\\\\work\\\\bram-ring\\\\gpu\\\\packed_tiled.py\"}, \"numpy\": \"2.5.4\", \"platform\": \"Windows-11-10.0.26300-SP0\", \"python\": \"3.12.14\", \"sm_count\": 16, \"total_vram_bytes\": 4294639616, \"utc\": \"2026-10-21T10:12:43.228846+00:00\"}"
+  ],
+  "metadata": {
+    "B": 768,
+    "DEPTH": 512,
+    "MINE_K": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "NDSP": 128,
+    "STEPS": 2048,
+    "W": 20,
+    "chunk_hashes": 0,
+    "compute_capability": "75",
+    "cuda_driver": 13020,
+    "cuda_runtime": 12090,
+    "cupy": "14.2.0",
+    "device_id": 0,
+    "device_name": "NVIDIA T1200 Laptop GPU",
+    "epoch": "codex-check-2026-10-20-7c9f2d4e",
+    "kernel_attributes": {
+      "baseline": {
+        "binary_version": 75,
+        "cache_mode_ca": 0,
+        "const_size_bytes": 0,
+        "local_size_bytes": 0,
+        "max_dynamic_shared_size_bytes": 41980,
+        "max_threads_per_block": 768,
+        "num_regs": 80,
+        "preferred_shared_memory_carveout": -1,
+        "ptx_version": 75,
+        "shared_size_bytes": 7172
+      },
+      "candidate": {
+        "binary_version": 75,
+        "cache_mode_ca": 0,
+        "const_size_bytes": 0,
+        "local_size_bytes": 0,
+        "max_dynamic_shared_size_bytes": 41980,
+        "max_threads_per_block": 768,
+        "num_regs": 80,
+        "preferred_shared_memory_carveout": -1,
+        "ptx_version": 75,
+        "shared_size_bytes": 7172
+      }
+    },
+    "module_configuration": {
+      "baseline": {},
+      "candidate": {
+        "BANK_TILE": 32,
+        "BANK_WORDS_PER_NONCE": 393216,
+        "MIN_BLOCKS": 2,
+        "TAP_LAYOUT": "column",
+        "UNROLL_TAPS": 1,
+        "VARIANT": "packed_tiled"
+      }
+    },
+    "module_sha256": {
+      "baseline": "1d4193c681d094fb580b29ad3d2abbee14c692644f976e0c8ab072451b6a49f8",
+      "candidate": "09f9c4d119388b6ade0ca85ae3c01d1b495a49bf2766d05194803b0f54ce4358"
+    },
+    "modules": {
+      "baseline": "C:\\Users\\PCUser\\Documents\\Codex\\2026-10-20\\https-x-com-peterrizun-status-2107245548311060888\\work\\bram-ring\\gpu\\mine.py",
+      "candidate": "C:\\Users\\PCUser\\Documents\\Codex\\2026-10-20\\https-x-com-peterrizun-status-2107245548311060888\\work\\bram-ring\\gpu\\packed_tiled.py"
+    },
+    "numpy": "2.5.4",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python": "3.12.14",
+    "sm_count": 16,
+    "total_vram_bytes": 4294639616,
+    "utc": "2026-10-21T10:12:43.228846+00:00"
+  },
+  "runs": [],
+  "status": "passed",
+  "vectors": {
+    "baseline": 8,
+    "candidate": 8,
+    "columns": "all four"
+  }
+}

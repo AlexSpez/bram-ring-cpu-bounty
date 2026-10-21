@@ -1,0 +1,261 @@
+{
+  "arguments": {
+    "baseline": "packed",
+    "blocks": 460,
+    "candidate": "packed_tiled",
+    "chunk_hashes": 128,
+    "hashes": 920,
+    "json_output": "work\\gpu-tile32-full-packed.json",
+    "runs": 5,
+    "smoke": false,
+    "smoke_hashes": 4,
+    "smoke_repeats": 3,
+    "vector_output": null,
+    "vectors": "C:\\Users\\PCUser\\Documents\\Codex\\2026-10-20\\https-x-com-peterrizun-status-2107245548311060888\\work\\bram-ring\\vectors.txt",
+    "vectors_only": false
+  },
+  "log": [
+    "COMPARE baseline=packed candidate=packed_tiled epoch='epoch0' blocks=460",
+    "VECTOR baseline  nonce=0000000000000000 digest=1abdfc8903689b21066b4c6ab5955fbb4312321609480f8233aa98ad30dcefb7 fold=f32e6d5f full_state=PASS",
+    "VECTOR baseline  nonce=0000000000000001 digest=5cb899fa35f60df7b0fdd7ce6cd8695de2f347d83488f22d2956d20ab87b334c fold=84099f1c full_state=PASS",
+    "VECTOR baseline  nonce=00000000deadbeef digest=fff37d0073b579a6117683218bfd6bfd8717e0f0dd51cf6e19eea8eade0b6b4f fold=539b32a3 full_state=PASS",
+    "VECTOR baseline  nonce=ffffffffffffffff digest=a4e90a347a5b1ae52b6e2f3fe459196f4510164b8e368467ea409077bec80bc8 fold=d5ab9c9e full_state=PASS",
+    "VECTOR baseline  nonce=8000000000000000 digest=fb873006ac3f0a5311280fd0b54690114e05f09b531991f4c04e4a0dc4b32e96 fold=5a08cb81 full_state=PASS",
+    "VECTOR baseline  nonce=0123456789abcdef digest=6a485e6496ea222a4e70b0c4bb49f17c49fffd8d692ee5c6976c25c0e1df5405 fold=4823480e full_state=PASS",
+    "VECTOR baseline  nonce=5555555555555555 digest=d65429c2a1a1efc429ba540653d983ae8b62ccd148a0476bffc4fe9bba47fd2e fold=fdb20a00 full_state=PASS",
+    "VECTOR baseline  nonce=00000000ffffffff digest=7140ea80d0d906a7e0c2a2c4e66e7a233d29a0022b6a4357a068a7117b5d64e1 fold=c71cc590 full_state=PASS",
+    "PASS baseline: 8/8 vectors, every column bit-exact",
+    "VECTOR candidate nonce=0000000000000000 digest=1abdfc8903689b21066b4c6ab5955fbb4312321609480f8233aa98ad30dcefb7 fold=f32e6d5f full_state=PASS",
+    "VECTOR candidate nonce=0000000000000001 digest=5cb899fa35f60df7b0fdd7ce6cd8695de2f347d83488f22d2956d20ab87b334c fold=84099f1c full_state=PASS",
+    "VECTOR candidate nonce=00000000deadbeef digest=fff37d0073b579a6117683218bfd6bfd8717e0f0dd51cf6e19eea8eade0b6b4f fold=539b32a3 full_state=PASS",
+    "VECTOR candidate nonce=ffffffffffffffff digest=a4e90a347a5b1ae52b6e2f3fe459196f4510164b8e368467ea409077bec80bc8 fold=d5ab9c9e full_state=PASS",
+    "VECTOR candidate nonce=8000000000000000 digest=fb873006ac3f0a5311280fd0b54690114e05f09b531991f4c04e4a0dc4b32e96 fold=5a08cb81 full_state=PASS",
+    "VECTOR candidate nonce=0123456789abcdef digest=6a485e6496ea222a4e70b0c4bb49f17c49fffd8d692ee5c6976c25c0e1df5405 fold=4823480e full_state=PASS",
+    "VECTOR candidate nonce=5555555555555555 digest=d65429c2a1a1efc429ba540653d983ae8b62ccd148a0476bffc4fe9bba47fd2e fold=fdb20a00 full_state=PASS",
+    "VECTOR candidate nonce=00000000ffffffff digest=7140ea80d0d906a7e0c2a2c4e66e7a233d29a0022b6a4357a068a7117b5d64e1 fold=c71cc590 full_state=PASS",
+    "PASS candidate: 8/8 vectors, every column bit-exact",
+    "METADATA {\"B\": 768, \"DEPTH\": 512, \"MINE_K\": {\"baseline\": 1, \"candidate\": 1}, \"NDSP\": 128, \"STEPS\": 2048, \"W\": 20, \"chunk_hashes\": 128, \"compute_capability\": \"75\", \"cuda_driver\": 13020, \"cuda_runtime\": 12090, \"cupy\": \"14.2.0\", \"device_id\": 0, \"device_name\": \"NVIDIA T1200 Laptop GPU\", \"epoch\": \"epoch0\", \"kernel_attributes\": {\"baseline\": {\"binary_version\": 75, \"cache_mode_ca\": 0, \"const_size_bytes\": 0, \"local_size_bytes\": 0, \"max_dynamic_shared_size_bytes\": 41980, \"max_threads_per_block\": 768, \"num_regs\": 80, \"preferred_shared_memory_carveout\": -1, \"ptx_version\": 75, \"shared_size_bytes\": 7172}, \"candidate\": {\"binary_version\": 75, \"cache_mode_ca\": 0, \"const_size_bytes\": 0, \"local_size_bytes\": 0, \"max_dynamic_shared_size_bytes\": 41980, \"max_threads_per_block\": 768, \"num_regs\": 80, \"preferred_shared_memory_carveout\": -1, \"ptx_version\": 75, \"shared_size_bytes\": 7172}}, \"module_configuration\": {\"baseline\": {\"MIN_BLOCKS\": 2, \"TAP_LAYOUT\": \"column\", \"UNROLL_TAPS\": 1, \"VARIANT\": \"packed\"}, \"candidate\": {\"BANK_TILE\": 32, \"BANK_WORDS_PER_NONCE\": 393216, \"MIN_BLOCKS\": 2, \"TAP_LAYOUT\": \"column\", \"UNROLL_TAPS\": 1, \"VARIANT\": \"packed_tiled\"}}, \"module_sha256\": {\"baseline\": \"c28cfbff60084b61e4d0d5ac0993846ffeb1ccccc9cd3b433a407cb7b62ca54b\", \"candidate\": \"09f9c4d119388b6ade0ca85ae3c01d1b495a49bf2766d05194803b0f54ce4358\"}, \"modules\": {\"baseline\": \"C:\\\\Users\\\\PCUser\\\\Documents\\\\Codex\\\\2026-10-20\\\\https-x-com-peterrizun-status-2107245548311060888\\\\work\\\\bram-ring\\\\gpu\\\\packed.py\", \"candidate\": \"C:\\\\Users\\\\PCUser\\\\Documents\\\\Codex\\\\2026-10-20\\\\https-x-com-peterrizun-status-2107245548311060888\\\\work\\\\bram-ring\\\\gpu\\\\packed_tiled.py\"}, \"numpy\": \"2.5.4\", \"platform\": \"Windows-11-10.0.26300-SP0\", \"python\": \"3.12.14\", \"sm_count\": 16, \"total_vram_bytes\": 4294639616, \"utc\": \"2026-10-21T10:11:45.101472+00:00\"}",
+    "MEMORY free=3292.8MiB estimated_peak=192.4MiB reserve=204.8MiB",
+    "BATCH hashes_per_run=920 chunk_hashes=128 maximum_resident_hashes=128",
+    "TIMING wall-clock: GPU bank/output allocation + fill + run + full-state/fold host transfer + spec.pack serialization + SHA-256 per nonce; excludes tables, compilation, warm-up and comparisons",
+    "RUN pair=1 baseline  base=0000000000100000 hashes=920 blocks=460 seconds=3.602589 H/s=255.371915 digest_sha256=84b0de12b53f7457e6d912845d77a6f09c1648d9bd084e40dc191e4d43b78d90",
+    "RUN pair=1 candidate base=0000000000100000 hashes=920 blocks=460 seconds=3.386209 H/s=271.690227 digest_sha256=84b0de12b53f7457e6d912845d77a6f09c1648d9bd084e40dc191e4d43b78d90",
+    "PASS pair=1: all 920 full states, folds and SHA-256 digests agree",
+    "RUN pair=2 candidate base=0000000000100398 hashes=920 blocks=460 seconds=3.389211 H/s=271.449585 digest_sha256=7da4ad280094bd243c4da7039a66c4b8c329a8437b2ee93c18563ddeb5c68fa9",
+    "RUN pair=2 baseline  base=0000000000100398 hashes=920 blocks=460 seconds=3.603137 H/s=255.333075 digest_sha256=7da4ad280094bd243c4da7039a66c4b8c329a8437b2ee93c18563ddeb5c68fa9",
+    "PASS pair=2: all 920 full states, folds and SHA-256 digests agree",
+    "RUN pair=3 baseline  base=0000000000100730 hashes=920 blocks=460 seconds=3.599707 H/s=255.576328 digest_sha256=e290b0e7c8fc4cf84026b67d5d5daf706d5fb8d626a3610a81422832a833fbe5",
+    "RUN pair=3 candidate base=0000000000100730 hashes=920 blocks=460 seconds=3.387837 H/s=271.559668 digest_sha256=e290b0e7c8fc4cf84026b67d5d5daf706d5fb8d626a3610a81422832a833fbe5",
+    "PASS pair=3: all 920 full states, folds and SHA-256 digests agree",
+    "RUN pair=4 candidate base=0000000000100ac8 hashes=920 blocks=460 seconds=3.387185 H/s=271.611941 digest_sha256=bf19b01c97a1deb330f5e0b797c1e1eda41ed1d73c48044b6628cb237d49fb32",
+    "RUN pair=4 baseline  base=0000000000100ac8 hashes=920 blocks=460 seconds=3.597563 H/s=255.728648 digest_sha256=bf19b01c97a1deb330f5e0b797c1e1eda41ed1d73c48044b6628cb237d49fb32",
+    "PASS pair=4: all 920 full states, folds and SHA-256 digests agree",
+    "RUN pair=5 baseline  base=0000000000100e60 hashes=920 blocks=460 seconds=3.601440 H/s=255.453374 digest_sha256=0765d307858f58a3d40cbabab905fe861f588a5b7e0db105aca76f0a26a8b494",
+    "RUN pair=5 candidate base=0000000000100e60 hashes=920 blocks=460 seconds=3.387947 H/s=271.550851 digest_sha256=0765d307858f58a3d40cbabab905fe861f588a5b7e0db105aca76f0a26a8b494",
+    "PASS pair=5: all 920 full states, folds and SHA-256 digests agree",
+    "ARITHMETIC_MEAN baseline=255.492668H/s candidate=271.572454H/s ratio=1.062936 improvement=+6.294%",
+    "Local comparison complete. An award still requires the reference RTX 3070 session."
+  ],
+  "metadata": {
+    "B": 768,
+    "DEPTH": 512,
+    "MINE_K": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "NDSP": 128,
+    "STEPS": 2048,
+    "W": 20,
+    "chunk_hashes": 128,
+    "compute_capability": "75",
+    "cuda_driver": 13020,
+    "cuda_runtime": 12090,
+    "cupy": "14.2.0",
+    "device_id": 0,
+    "device_name": "NVIDIA T1200 Laptop GPU",
+    "epoch": "epoch0",
+    "kernel_attributes": {
+      "baseline": {
+        "binary_version": 75,
+        "cache_mode_ca": 0,
+        "const_size_bytes": 0,
+        "local_size_bytes": 0,
+        "max_dynamic_shared_size_bytes": 41980,
+        "max_threads_per_block": 768,
+        "num_regs": 80,
+        "preferred_shared_memory_carveout": -1,
+        "ptx_version": 75,
+        "shared_size_bytes": 7172
+      },
+      "candidate": {
+        "binary_version": 75,
+        "cache_mode_ca": 0,
+        "const_size_bytes": 0,
+        "local_size_bytes": 0,
+        "max_dynamic_shared_size_bytes": 41980,
+        "max_threads_per_block": 768,
+        "num_regs": 80,
+        "preferred_shared_memory_carveout": -1,
+        "ptx_version": 75,
+        "shared_size_bytes": 7172
+      }
+    },
+    "module_configuration": {
+      "baseline": {
+        "MIN_BLOCKS": 2,
+        "TAP_LAYOUT": "column",
+        "UNROLL_TAPS": 1,
+        "VARIANT": "packed"
+      },
+      "candidate": {
+        "BANK_TILE": 32,
+        "BANK_WORDS_PER_NONCE": 393216,
+        "MIN_BLOCKS": 2,
+        "TAP_LAYOUT": "column",
+        "UNROLL_TAPS": 1,
+        "VARIANT": "packed_tiled"
+      }
+    },
+    "module_sha256": {
+      "baseline": "c28cfbff60084b61e4d0d5ac0993846ffeb1ccccc9cd3b433a407cb7b62ca54b",
+      "candidate": "09f9c4d119388b6ade0ca85ae3c01d1b495a49bf2766d05194803b0f54ce4358"
+    },
+    "modules": {
+      "baseline": "C:\\Users\\PCUser\\Documents\\Codex\\2026-10-20\\https-x-com-peterrizun-status-2107245548311060888\\work\\bram-ring\\gpu\\packed.py",
+      "candidate": "C:\\Users\\PCUser\\Documents\\Codex\\2026-10-20\\https-x-com-peterrizun-status-2107245548311060888\\work\\bram-ring\\gpu\\packed_tiled.py"
+    },
+    "numpy": "2.5.4",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python": "3.12.14",
+    "sm_count": 16,
+    "total_vram_bytes": 4294639616,
+    "utc": "2026-10-21T10:11:45.101472+00:00"
+  },
+  "runs": [
+    {
+      "base_nonce": "0000000000100000",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "84b0de12b53f7457e6d912845d77a6f09c1648d9bd084e40dc191e4d43b78d90",
+      "hashes": 920,
+      "hashes_per_second": 255.37191477414908,
+      "implementation": "baseline",
+      "pair": 1,
+      "seconds": 3.602588800000376
+    },
+    {
+      "base_nonce": "0000000000100000",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "84b0de12b53f7457e6d912845d77a6f09c1648d9bd084e40dc191e4d43b78d90",
+      "hashes": 920,
+      "hashes_per_second": 271.6902268359709,
+      "implementation": "candidate",
+      "pair": 1,
+      "seconds": 3.386209399999643
+    },
+    {
+      "base_nonce": "0000000000100398",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "7da4ad280094bd243c4da7039a66c4b8c329a8437b2ee93c18563ddeb5c68fa9",
+      "hashes": 920,
+      "hashes_per_second": 271.4495847458497,
+      "implementation": "candidate",
+      "pair": 2,
+      "seconds": 3.389211299996532
+    },
+    {
+      "base_nonce": "0000000000100398",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "7da4ad280094bd243c4da7039a66c4b8c329a8437b2ee93c18563ddeb5c68fa9",
+      "hashes": 920,
+      "hashes_per_second": 255.33307533614538,
+      "implementation": "baseline",
+      "pair": 2,
+      "seconds": 3.6031367999967188
+    },
+    {
+      "base_nonce": "0000000000100730",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "e290b0e7c8fc4cf84026b67d5d5daf706d5fb8d626a3610a81422832a833fbe5",
+      "hashes": 920,
+      "hashes_per_second": 255.57632823126414,
+      "implementation": "baseline",
+      "pair": 3,
+      "seconds": 3.599707400004263
+    },
+    {
+      "base_nonce": "0000000000100730",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "e290b0e7c8fc4cf84026b67d5d5daf706d5fb8d626a3610a81422832a833fbe5",
+      "hashes": 920,
+      "hashes_per_second": 271.5596681235633,
+      "implementation": "candidate",
+      "pair": 3,
+      "seconds": 3.3878373999978066
+    },
+    {
+      "base_nonce": "0000000000100ac8",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "bf19b01c97a1deb330f5e0b797c1e1eda41ed1d73c48044b6628cb237d49fb32",
+      "hashes": 920,
+      "hashes_per_second": 271.61194069839934,
+      "implementation": "candidate",
+      "pair": 4,
+      "seconds": 3.387185400002636
+    },
+    {
+      "base_nonce": "0000000000100ac8",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "bf19b01c97a1deb330f5e0b797c1e1eda41ed1d73c48044b6628cb237d49fb32",
+      "hashes": 920,
+      "hashes_per_second": 255.72864833223383,
+      "implementation": "baseline",
+      "pair": 4,
+      "seconds": 3.5975633000052767
+    },
+    {
+      "base_nonce": "0000000000100e60",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "0765d307858f58a3d40cbabab905fe861f588a5b7e0db105aca76f0a26a8b494",
+      "hashes": 920,
+      "hashes_per_second": 255.45337420597625,
+      "implementation": "baseline",
+      "pair": 5,
+      "seconds": 3.601439999998547
+    },
+    {
+      "base_nonce": "0000000000100e60",
+      "blocks": 460,
+      "chunk_hashes": 128,
+      "digest_sha256": "0765d307858f58a3d40cbabab905fe861f588a5b7e0db105aca76f0a26a8b494",
+      "hashes": 920,
+      "hashes_per_second": 271.5508511142653,
+      "implementation": "candidate",
+      "pair": 5,
+      "seconds": 3.387947399998666
+    }
+  ],
+  "status": "passed",
+  "summary": {
+    "arithmetic_mean_hps": {
+      "baseline": 255.49266817595372,
+      "candidate": 271.57245430360973
+    },
+    "bounty_sized_runs": true,
+    "candidate_to_baseline_ratio": 1.0629363896915511,
+    "improvement_percent": 6.293638969155113
+  },
+  "vectors": {
+    "baseline": 8,
+    "candidate": 8,
+    "columns": "all four"
+  }
+}

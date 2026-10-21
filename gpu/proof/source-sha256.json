@@ -1,0 +1,10 @@
+{
+  "spec.py": "5596327c5fc89b4d87eaf64df0b25e8430a9b25247ebae4c3e1037c19cd2f292",
+  "generate.py": "20f78b63ff10f7b4fee681355190e91eaaeb527a733d2701d928eb0ac6534dab",
+  "vectors.txt": "d406e2319f21e641dc77fcf79693c88062cc312cd1d75f0c286fa4ba85cf88f1",
+  "gpu/packed.py": "c28cfbff60084b61e4d0d5ac0993846ffeb1ccccc9cd3b433a407cb7b62ca54b",
+  "gpu/packed_tiled.py": "09f9c4d119388b6ade0ca85ae3c01d1b495a49bf2766d05194803b0f54ce4358",
+  "gpu/compare_gpu.py": "71fe2bbc6ec09468ca25d30377d556f3735a7b0691e769f173b0999e1817ad3b",
+  "gpu/packed_pool.py": "2976e6fdf70d20a936623bd7d49c0296f5432947bbc529fcf87860c3d2e98efb",
+  "gpu/packed_pool3.py": "94fe53962a2b025e87cf6d0f2ae66d1b6669749f70a4a70948fe9d709e52c50e"
+}

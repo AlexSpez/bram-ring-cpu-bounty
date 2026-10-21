@@ -1,0 +1,75 @@
+BRAM-ring GPU kernel submission candidate
+Prize sought: 0.01 BTC GPU speed award, subject to reference verification.
+
+LOCAL RESULTS (21 October 2026)
+NVIDIA T1200 Laptop GPU, Windows 11, CuPy 14.2.0, CUDA runtime 12.9.
+Five alternating pairs, 920 nonces per implementation per run, arithmetic
+mean. Complete fill, run, full state/fold host transfer, spec.pack-equivalent
+3-byte-per-lane serialization and SHA-256 per nonce are timed. One-time
+table generation, kernel compilation and warm-up are excluded.
+
+Stock mine.py:  230.057350 H/s
+Tiled kernel:   271.506925 H/s
+Improvement:   +18.017062%
+
+Separate direct comparison to the earlier packed implementation:
+Packed:        255.492668 H/s
+Tiled:         271.572454 H/s
+Improvement:   +6.293639%
+
+These are local T1200 results, NOT RTX 3070 measurements or a confirmed
+award. The reference-machine decision must compare the then-current
+champion and this candidate back to back under the bounty rules.
+
+DESIGN
+packed.py evaluates the twenty CA cells of each lane using sixteen
+lane-wide rule masks and fifteen Boolean multiplexers. Tap index/shift
+metadata is packed into uint16 and stored column-major.
+packed_tiled.py changes the physical RAM layout only:
+  index(row,lane) = (lane // TILE)*DEPTH*TILE + row*TILE + lane % TILE
+TILE=32 is the measured configuration. The mapping is bijective over the
+same B*DEPTH words; fill stores remain warp-contiguous. Fill and atomic RMW
+use the identical mapping. Every specified cell evaluation and bank RMW
+is retained. This is a speed implementation, not a counted-work shortcut.
+
+MEASURED CONFIGURATION
+MINE_K=1
+PACKED_VARIANT=packed
+PACKED_TAP_LAYOUT=column
+PACKED_MIN_BLOCKS=2
+PACKED_UNROLL_TAPS=1
+PACKED_TILED_BASE=packed
+GPU_BANK_TILE=32
+
+All are the modules' defaults. Set them explicitly if overriding an
+existing shell environment. packed_pool.py and packed_pool3.py are included
+only to support the optional alternate base; the claim uses base=packed.
+
+RUN (repository root; Python 3, NumPy, CuPy and compatible NVIDIA runtime)
+  python gpu/compare_gpu.py --baseline mine --candidate packed_tiled --hashes 920 --runs 5 --blocks 460 --chunk-hashes 128 --json-output stock-vs-tiled.json
+  python gpu/compare_gpu.py --baseline packed --candidate packed_tiled --hashes 920 --runs 5 --blocks 460 --chunk-hashes 128 --json-output packed-vs-tiled.json
+
+Both recorded Windows sessions use 128-nonce chunks (last chunk=24) inside
+one wall timer per 920-nonce run, identically for both implementations.
+On the RTX 3070 under Linux, --chunk-hashes 0 uses a single 920-nonce batch
+for each timed run. The harness includes the digest for every nonce.
+
+CORRECTNESS
+  python gpu/packed_tiled.py vectors | python host/check_vectors.py
+
+All eight epoch0 vectors passed in every column. Every one of the 4,600
+distinct benchmark nonces agreed in full state, fold and digest in both
+large comparison sessions. A separate seed also passed all eight vectors.
+The proof directory contains original JSON logs, the separate reference
+vectors, four-column candidate output and this seed-check command result.
+
+To reproduce the already recorded alternate-seed check in a POSIX shell:
+  BRAM_EPOCH=codex-check-2026-10-20-7c9f2d4e python gpu/compare_gpu.py --candidate packed_tiled --vectors-only --vectors gpu/proof/fresh-reference-vectors.txt --json-output fresh-check.json
+
+For Peter's newly supplied seed, use a scratch clone and export BRAM_EPOCH
+to that seed, run python generate.py, then run the vector pipe above.
+Do not alter the frozen spec.py, generate.py or vectors.txt in the claim
+commit. The existing alternate-seed test does not replace Peter's check.
+
+The earlier CPU submission is a separate claim. This GPU commit adds only
+GPU implementation files, proof files and this GPU-specific description.

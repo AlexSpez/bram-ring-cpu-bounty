@@ -1,0 +1,21 @@
+{
+  "group": 8,
+  "reverse": 1,
+  "fresh": true,
+  "compiler": "gcc.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.2.0",
+  "flags": [
+    "-O3",
+    "-march=native",
+    "-funroll-loops",
+    "-fopenmp"
+  ],
+  "source_sha256": {
+    "original": "cef9169590a4b81201879ce92959b155b3e7c3fbf6ec20372e45e9f98ceed05b",
+    "scalar": "a5f892c74ebbea73fc264722f29863493de14e472f40d745631d3aee995f212c",
+    "competitor": "2fd3063a1eaf0ddedf51553ec0c59caa1111654d221ca73e1458a7fc1cad1436",
+    "combined": "d6f72667c549b8668fa49c5147115dd2df9464d6b55be4c23e9aa590de0e5906"
+  },
+  "tables_sha256": "65930c7f9d432127d2bf8e0bc0bede1428eb1318349049b2da16845341f5a35a",
+  "harness_sha256": "a3958459a9152088e87487b74c47a07b3cac45016aacc2f85fcb00707915ecfd",
+  "executable": "C:\\Users\\PCUser\\Documents\\Codex\\2026-10-20\\https-x-com-peterrizun-status-2107245548311060888\\work\\cpu-combined-build\\fresh\\compare_g8r1.exe"
+}

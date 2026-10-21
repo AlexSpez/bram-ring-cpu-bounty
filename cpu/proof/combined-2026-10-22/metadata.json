@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-22",
+  "device": "Intel i7-11850H, Lenovo ThinkPad P15 Gen 2i",
+  "os": "Windows",
+  "threads": 8,
+  "explicit_cpu_affinity": false,
+  "compiler": "GCC 16.2.0 (WinLibs MinGW-W64 UCRT POSIX)",
+  "flags": [
+    "-O3",
+    "-march=native",
+    "-funroll-loops",
+    "-fopenmp"
+  ],
+  "group": 8,
+  "reverse": 1,
+  "upstream_commit": "4bde6441f8f39764f5ab9b64a60e4cb613f72014",
+  "our_scalar_commit": "285876608d09563ea5aa8e4fb992f277dab9e7dd",
+  "competitor_commit": "a15116f1a5bf92ad1caf3cb8070e4273554c4f14",
+  "fresh_seed": "codex-check-2026-10-20-7c9f2d4e",
+  "source_sha256": {
+    "cpu/verify_combined_taps.c": "243d0bd95ae50a36c2985a3af7ef1ec9047bac2e317f54d244ff02ff95a7761c",
+    "cpu/compare_combined.c": "a3958459a9152088e87487b74c47a07b3cac45016aacc2f85fcb00707915ecfd",
+    "cpu/compare_combined.py": "f974b4318059f4ce1371401147432284b8f4c25d5b6c88c657f898d3fc7670ad",
+    "cpu/reference_inkier_a15116f.c": "2fd3063a1eaf0ddedf51553ec0c59caa1111654d221ca73e1458a7fc1cad1436",
+    "cpu/verify_avx2.c": "cef9169590a4b81201879ce92959b155b3e7c3fbf6ec20372e45e9f98ceed05b",
+    "cpu/verify_scalar_taps.c": "a5f892c74ebbea73fc264722f29863493de14e472f40d745631d3aee995f212c",
+    "cpu/tables.h": "c25ec853118e1e5eede4be5ef204768921fde242fd926f8a214e69dc004085c6"
+  },
+  "frozen_sha256": {
+    "spec.py": "5596327c5fc89b4d87eaf64df0b25e8430a9b25247ebae4c3e1037c19cd2f292",
+    "generate.py": "20f78b63ff10f7b4fee681355190e91eaaeb527a733d2701d928eb0ac6534dab",
+    "vectors.txt": "d406e2319f21e641dc77fcf79693c88062cc312cd1d75f0c286fa4ba85cf88f1"
+  },
+  "fresh_vectors_sha256": "b00f3715217bebae81c082b1bbe0f202179bafd2381cd1133d1b65ee8a1e2b47",
+  "official_reference_result": "not measured on Peter Rizun's i7-12700KF"
+}

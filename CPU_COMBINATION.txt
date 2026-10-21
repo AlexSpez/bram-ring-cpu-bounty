@@ -1,0 +1,81 @@
+BRAM-ring: combined CPU implementation (22 October 2026)
+
+Implementation and attribution
+------------------------------
+The candidate retains the scalar lane-major tap loads from our CPU commit
+285876608d09563ea5aa8e4fb992f277dab9e7dd, based on Peter Rizun's AVX2 verifier.
+It adopts the aliased head/product pool and reverse tap-word accumulation
+from kepler-ops-maker's MIT-licensed CPU submission
+a15116f1a5bf92ad1caf3cb8070e4273554c4f14, and interleaves independent scalar
+tap accumulators. Defaults: BRAM_TAP_GROUP=8, BRAM_REVERSE_TAPS=1.
+The original MIT license and Peter Rizun copyright remain in LICENSE.
+The competitor source is retained as an exact Git blob for comparisons.
+
+The function, ring rotation, two-step DSP product delay, full-depth banks,
+and number of bank read-modify-writes are unchanged. This is an implementation
+speed optimization, not a claim to halve the specified work.
+
+Local result (this session, full SHA-256 timed)
+----------------------------------------------
+Device: Intel i7-11850H, Lenovo ThinkPad P15 Gen 2i, Windows, 8 OpenMP threads.
+Compiler: GCC 16.2.0, -O3 -march=native -funroll-loops -fopenmp.
+No explicit CPU affinity. Variant order rotates between runs. All variants
+use the same compiler flags, inputs and full-SHA harness in one executable.
+Arithmetic means of 5 runs, 800 nonces per variant per run:
+
+  Original reference:       101.330 H/s
+  Our submitted scalar:    130.358 H/s
+  Inkier submitted code:   106.789 H/s
+  Combined candidate:      162.709 H/s
+
+Combined gain over original: +60.57%
+Combined gain over our scalar submission: +24.82%
+Combined gain over inkier's code: +52.36%
+
+These are local Windows measurements. The bounty is decided on Peter's
+i7-12700KF, with the claim-time champion measured in the same session.
+This local result establishes no official prize or reference-machine speed.
+Earlier verified claims can raise the champion. Reusing MIT-licensed ideas
+does not preserve the priority timestamp of an earlier different commit.
+
+Correctness evidence
+--------------------
+- All eight published epoch0 vectors pass nonce, digest, fold and full state.
+- All eight separately generated seed vectors pass every column.
+- Fresh seed: codex-check-2026-10-20-7c9f2d4e.
+- All four implementations agree on 64 diverse 64-bit nonces in epoch0
+  and 32 in the fresh seed, including every state word, SHA-256 and fold.
+- For all 4,000 full-benchmark nonces, the aggregate SHA-256 of all ordered
+  full nonce digests agrees across the four implementations in each run.
+- spec.py, generate.py and vectors.txt retain their published SHA-256 hashes.
+- Screening tried GROUP=1,2,4,8 and REVERSE=0,1; every variant passed the
+  separate 16-nonce state/digest/fold comparison before speed screening.
+- The portable reproduction helper was also built and run successfully
+  with its defaults, checking all four implementations on eight nonces.
+
+Reproduce from the repository root (Linux with GCC, OpenMP and Python 3)
+---------------------------------------------------------------------
+  gcc -O3 -march=native -funroll-loops -fopenmp \
+    -o cpu/verify_combined_taps cpu/verify_combined_taps.c cpu/sha256.c
+  cpu/verify_combined_taps vectors | python3 host/check_vectors.py
+  OMP_NUM_THREADS=8 python3 cpu/compare_combined.py --mode verify --count 64
+  OMP_NUM_THREADS=8 python3 cpu/compare_combined.py --mode bench --count 800 --runs 5
+
+The helper also accepts --group, --reverse, --cc and --tables-dir.
+For another epoch, regenerate with BRAM_EPOCH=<seed> python3 generate.py
+in a scratch copy; never overwrite the frozen function files in a claim.
+On Peter's reference CPU, pin the eight physical P-cores according to BOUNTY.md.
+The standalone bench entry point also runs five full-SHA measurements.
+
+Evidence files
+--------------
+cpu/proof/combined-2026-10-22 contains full per-run logs, build metadata,
+source hashes, all-column vector outputs, the fresh reference vectors and
+screening results. Timed work includes hash_state, little-endian serialization
+of the full state and SHA-256 for every nonce. Table construction, allocation,
+per-thread warmup and reporting checksums are outside the timer.
+
+Public provenance
+-----------------
+https://github.com/AlexSpez/bram-ring-cpu-bounty/commit/285876608d09563ea5aa8e4fb992f277dab9e7dd
+https://github.com/kepler-ops-maker/bram-ring-cpu/commit/a15116f1a5bf92ad1caf3cb8070e4273554c4f14

@@ -1,0 +1,31 @@
+CONFIG B=768 W=20 lane_bytes=3 max_threads=8 mode=bench
+SETUP all_four_table_initializers_warmed_serially=yes all_four_functions_and_full_digests_warmed_per_thread=yes timing_includes=hash_state+lane_serialization+full_SHA256
+RUN name=original run=1 count=800 base=0000000000100000 seconds=7.771000147 Hps=102.946851741 digest_checksum=db2dadec21cd627af8b71039ab3a747de680220cc0b1a1dc2301bab873e798a7
+RUN name=scalar run=1 count=800 base=0000000000100000 seconds=5.898999929 Hps=135.616207759 digest_checksum=db2dadec21cd627af8b71039ab3a747de680220cc0b1a1dc2301bab873e798a7
+RUN name=competitor run=1 count=800 base=0000000000100000 seconds=7.401000023 Hps=108.093500544 digest_checksum=db2dadec21cd627af8b71039ab3a747de680220cc0b1a1dc2301bab873e798a7
+RUN name=combined run=1 count=800 base=0000000000100000 seconds=4.795000076 Hps=166.840456157 digest_checksum=db2dadec21cd627af8b71039ab3a747de680220cc0b1a1dc2301bab873e798a7
+PASS run=1 count=800 all_full_digest_checksums_agree=yes
+RUN name=scalar run=2 count=800 base=0000000000100320 seconds=6.470999956 Hps=123.628497207 digest_checksum=cfe65f5648faeeb2c32d84980ef1367983210b20c8663c3b229d49e19516ec06
+RUN name=competitor run=2 count=800 base=0000000000100320 seconds=7.568000078 Hps=105.708244151 digest_checksum=cfe65f5648faeeb2c32d84980ef1367983210b20c8663c3b229d49e19516ec06
+RUN name=combined run=2 count=800 base=0000000000100320 seconds=4.983999968 Hps=160.513644704 digest_checksum=cfe65f5648faeeb2c32d84980ef1367983210b20c8663c3b229d49e19516ec06
+RUN name=original run=2 count=800 base=0000000000100320 seconds=7.944000006 Hps=100.704934469 digest_checksum=cfe65f5648faeeb2c32d84980ef1367983210b20c8663c3b229d49e19516ec06
+PASS run=2 count=800 all_full_digest_checksums_agree=yes
+RUN name=competitor run=3 count=800 base=0000000000100640 seconds=7.447999954 Hps=107.411386267 digest_checksum=e49e5136e2f5be2440c9c79f86c82872ef30ce7e2cdcd2e3cf2f0dbd67eb7770
+RUN name=combined run=3 count=800 base=0000000000100640 seconds=5.107000113 Hps=156.647734947 digest_checksum=e49e5136e2f5be2440c9c79f86c82872ef30ce7e2cdcd2e3cf2f0dbd67eb7770
+RUN name=original run=3 count=800 base=0000000000100640 seconds=8.066999912 Hps=99.169456886 digest_checksum=e49e5136e2f5be2440c9c79f86c82872ef30ce7e2cdcd2e3cf2f0dbd67eb7770
+RUN name=scalar run=3 count=800 base=0000000000100640 seconds=6.137000084 Hps=130.356850099 digest_checksum=e49e5136e2f5be2440c9c79f86c82872ef30ce7e2cdcd2e3cf2f0dbd67eb7770
+PASS run=3 count=800 all_full_digest_checksums_agree=yes
+RUN name=combined run=4 count=800 base=0000000000100960 seconds=4.700000048 Hps=170.212764231 digest_checksum=5266e3e7ae7c02897fef706c3be9666b2238cb883d2abb9fe240f134793086ec
+RUN name=original run=4 count=800 base=0000000000100960 seconds=7.809999943 Hps=102.432779240 digest_checksum=5266e3e7ae7c02897fef706c3be9666b2238cb883d2abb9fe240f134793086ec
+RUN name=scalar run=4 count=800 base=0000000000100960 seconds=6.092999935 Hps=131.298212459 digest_checksum=5266e3e7ae7c02897fef706c3be9666b2238cb883d2abb9fe240f134793086ec
+RUN name=competitor run=4 count=800 base=0000000000100960 seconds=7.422000170 Hps=107.787655848 digest_checksum=5266e3e7ae7c02897fef706c3be9666b2238cb883d2abb9fe240f134793086ec
+PASS run=4 count=800 all_full_digest_checksums_agree=yes
+RUN name=original run=5 count=800 base=0000000000100c80 seconds=7.889999866 Hps=101.394171551 digest_checksum=116c2159fc7bb02c6f5aeb3044bdc9e247c49813bc903a704eb9e7a9bc4218c0
+RUN name=scalar run=5 count=800 base=0000000000100c80 seconds=6.111999989 Hps=130.890052601 digest_checksum=116c2159fc7bb02c6f5aeb3044bdc9e247c49813bc903a704eb9e7a9bc4218c0
+RUN name=competitor run=5 count=800 base=0000000000100c80 seconds=7.622999907 Hps=104.945560778 digest_checksum=116c2159fc7bb02c6f5aeb3044bdc9e247c49813bc903a704eb9e7a9bc4218c0
+RUN name=combined run=5 count=800 base=0000000000100c80 seconds=5.021000147 Hps=159.330805935 digest_checksum=116c2159fc7bb02c6f5aeb3044bdc9e247c49813bc903a704eb9e7a9bc4218c0
+PASS run=5 count=800 all_full_digest_checksums_agree=yes
+MEAN name=original runs=5 count=800 arithmetic_Hps=101.329638777
+MEAN name=scalar runs=5 count=800 arithmetic_Hps=130.357964025
+MEAN name=competitor runs=5 count=800 arithmetic_Hps=106.789269517
+MEAN name=combined runs=5 count=800 arithmetic_Hps=162.709081195

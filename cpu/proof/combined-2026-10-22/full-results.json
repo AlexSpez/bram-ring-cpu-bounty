@@ -1,0 +1,18 @@
+{
+  "group": 8,
+  "reverse": 1,
+  "threads": 8,
+  "count": 800,
+  "runs": 5,
+  "means": {
+    "original": 101.329638777,
+    "scalar": 130.357964025,
+    "competitor": 106.789269517,
+    "combined": 162.709081195
+  },
+  "gains_percent": {
+    "original": 60.57402667059743,
+    "scalar": 24.817139030949974,
+    "competitor": 52.364635445978045
+  }
+}

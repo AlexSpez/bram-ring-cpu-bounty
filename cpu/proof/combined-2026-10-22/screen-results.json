@@ -1,0 +1,74 @@
+[
+  {
+    "group": 1,
+    "reverse": 0,
+    "means": {
+      "scalar": 128.633135525,
+      "combined": 127.696941342
+    },
+    "gain_over_scalar_percent": -0.7278017278977478
+  },
+  {
+    "group": 1,
+    "reverse": 1,
+    "means": {
+      "scalar": 127.863747206,
+      "combined": 133.62196519
+    },
+    "gain_over_scalar_percent": 4.503401558162534
+  },
+  {
+    "group": 2,
+    "reverse": 0,
+    "means": {
+      "scalar": 125.245083101,
+      "combined": 141.363715109
+    },
+    "gain_over_scalar_percent": 12.869672492453542
+  },
+  {
+    "group": 2,
+    "reverse": 1,
+    "means": {
+      "scalar": 120.952816351,
+      "combined": 137.877359781
+    },
+    "gain_over_scalar_percent": 13.992682386895128
+  },
+  {
+    "group": 4,
+    "reverse": 0,
+    "means": {
+      "scalar": 136.093784861,
+      "combined": 156.643250673
+    },
+    "gain_over_scalar_percent": 15.09948880691967
+  },
+  {
+    "group": 4,
+    "reverse": 1,
+    "means": {
+      "scalar": 136.461768579,
+      "combined": 165.983857968
+    },
+    "gain_over_scalar_percent": 21.633963634224163
+  },
+  {
+    "group": 8,
+    "reverse": 0,
+    "means": {
+      "scalar": 122.72234815,
+      "combined": 142.14075303
+    },
+    "gain_over_scalar_percent": 15.823038894485176
+  },
+  {
+    "group": 8,
+    "reverse": 1,
+    "means": {
+      "scalar": 132.188703776,
+      "combined": 165.441888744
+    },
+    "gain_over_scalar_percent": 25.155844650953753
+  }
+]
